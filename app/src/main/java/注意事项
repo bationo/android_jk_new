@@ -1,0 +1,3 @@
+
+
+* 所有Activity必须放在activity包下,并且所有Activity必须调用ActivityUtils工具类。.。

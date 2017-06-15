@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'android-apt'
+//使用greendao
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 24
@@ -21,8 +23,16 @@ android {
     }
 }
 
+//greendao配置
+greendao {
+    //版本号，升级时可配置
+    schemaVersion 1
+    daoPackage 'cmy.android_jk_new.greendao'
+    targetGenDir 'src/main/java'
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -39,4 +49,8 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     //Logger:   简单，漂亮，强大的Android日志工具。
     compile 'com.orhanobut:logger:1.15'
+    //greendao依赖
+    compile 'org.greenrobot:greendao:3.2.0'
+    compile files('libs/serialport.jar')
+    compile files('libs/usb06fp.jar')
 }

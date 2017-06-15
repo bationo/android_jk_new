@@ -1,5 +1,6 @@
 package cmy.android_jk_new.activity;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,11 +16,18 @@ import android.widget.TextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import butterknife.ButterKnife;
 import cmy.android_jk_new.R;
+import cmy.android_jk_new.bean.LoginUser;
 import cmy.android_jk_new.constant.HttpConstant;
+import cmy.android_jk_new.greendao.DaoMaster;
+import cmy.android_jk_new.greendao.DaoSession;
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static cmy.android_jk_new.constant.DatabaseConstant.DATABASE_NAME;
 
 /**
  * A login screen that offers login via email/password.
@@ -32,6 +40,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mPasswordView;
 
+    //Dao对象的管理者
+    private static DaoSession daoSession;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         OkGo.init(getApplication());
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        setupDatabase();
 
 
         // Set up the login form.
@@ -86,6 +99,34 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setupDatabase() {
+        //创建数据库
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,DATABASE_NAME,null);
+        //获取可写数据库
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //获取数据库对象
+        DaoMaster dm = new DaoMaster(db);
+        //获取Dao对象的管理者
+        daoSession = dm.newSession();
+
+        LoginUser loginuser = new LoginUser();
+        loginuser.setLoginName("QWE");
+        loginuser.setPassWord("123");
+        loginuser.setUserFinger("====");
+        loginuser.setUserType("0");
+        daoSession.insert(loginuser);
+
+        QueryBuilder qb = daoSession.queryBuilder(LoginUser.class);
+        qb.list();
+
+        Log.d("test",""+qb.list());
+
+        for (int i = 0; i <qb.list().size() ; i++) {
+            LoginUser lu = (LoginUser) qb.list().get(i);
+            Log.d("test",lu.getLoginName());
+        }
     }
 
 }

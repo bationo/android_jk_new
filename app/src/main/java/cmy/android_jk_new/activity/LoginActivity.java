@@ -84,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.i("test", "" + call);
                                     Log.i("test", "" + response);
                                 }
-
                                 @Override
                                 public void onError(Call call, Response response, Exception e) {
                                     super.onError(call, response, e);

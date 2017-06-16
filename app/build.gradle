@@ -51,6 +51,9 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     //greendao依赖
     compile 'org.greenrobot:greendao:3.2.0'
+    //指纹识别Jar依赖
     compile files('libs/serialport.jar')
     compile files('libs/usb06fp.jar')
+    //DialogUtils material风格和ios风格的dialog,可传入 context 构建。
+    compile 'com.github.glassLake:DialogUtils:1.0.2'
 }

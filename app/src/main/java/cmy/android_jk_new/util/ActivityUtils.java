@@ -18,11 +18,12 @@ import java.util.List;
  *                在退出App的代码中调用destory()方法.
  */
 public class ActivityUtils extends Application {
-    public static List<Object> activitys = new ArrayList<>();
+    private static List<Object> activitys = new ArrayList<>();
     private static ActivityUtils instance;
 
     /**
-     * 获取单例模式中唯一的MyApplication实例
+     * 获取单例模式中唯一的MyApplication实例.
+     * @return instance
      */
     public static ActivityUtils getInstance() {
         if (instance == null) {
@@ -32,19 +33,18 @@ public class ActivityUtils extends Application {
     }
 
     /**
-     * 添加activity到容器中
-     *
-     * @param activity
+     * 添加activity到容器中.
+     * @param activity.
      */
-    public void addActivity(Activity activity) {
+    public void addActivity(final Activity activity) {
         if (!activitys.contains(activity)) {
             activitys.contains(activity);
         }
     }
 
     /**
-     * 退出App时调用该方法
-     * 遍历所有activity并且finish。
+     * 退出App时调用该方法.
+     * 遍历所有activity并且finish.
      */
     public void destory() {
         for (Object activity : activitys) {

@@ -43,8 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     //Dao对象的管理者
     private static DaoSession daoSession;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +51,10 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setupDatabase();
 
-
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
-
         mPasswordView = (EditText) findViewById(R.id.password_et_login);
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -102,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupDatabase() {
         //创建数据库
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,DATABASE_NAME,null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_NAME, null);
         //获取可写数据库
         SQLiteDatabase db = helper.getWritableDatabase();
         //获取数据库对象
@@ -120,11 +117,11 @@ public class LoginActivity extends AppCompatActivity {
         QueryBuilder qb = daoSession.queryBuilder(LoginUser.class);
         qb.list();
 
-        Log.d("test",""+qb.list());
+        Log.d("test", "" + qb.list());
 
-        for (int i = 0; i <qb.list().size() ; i++) {
+        for (int i = 0; i < qb.list().size(); i++) {
             LoginUser lu = (LoginUser) qb.list().get(i);
-            Log.d("test",lu.getLoginName());
+            Log.d("test", lu.getLoginName());
         }
     }
 

@@ -6,7 +6,13 @@ package cmy.android_jk_new.constant;
 
 public class DatabaseConstant {
     /**
-     * 数据库名称
+     * 防止子类调用.
+     */
+    protected DatabaseConstant() {
+        throw new UnsupportedOperationException();
+    }
+    /**
+     * 数据库名称.
      */
     public static final String DATABASE_NAME = "hlct";
 

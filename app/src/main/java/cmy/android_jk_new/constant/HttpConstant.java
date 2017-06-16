@@ -8,13 +8,22 @@ package cmy.android_jk_new.constant;
  */
 
 public class HttpConstant {
-    /**
-     * PDA登录地址
-     */
-    public static final String BASE_SERVER_URL = "http://192.168.1.109:8080/android_jkweb/";
 
     /**
-     * PDA登录地址
+     * 防止子类调用.
      */
-    public static final String URL_PDA_LOGIN = BASE_SERVER_URL + "/mobile-message!pdaLogin.do";
+    protected HttpConstant() {
+        throw new UnsupportedOperationException();
+    }
+    /**
+     * 服务器地址.
+     */
+    public static final String BASE_SERVER_URL =
+            "http://192.168.1.109:8080/android_jkweb/";
+
+    /**
+     * PDA登录地址.
+     */
+    public static final String URL_PDA_LOGIN =
+            BASE_SERVER_URL + "/mobile-message!pdaLogin.do";
 }

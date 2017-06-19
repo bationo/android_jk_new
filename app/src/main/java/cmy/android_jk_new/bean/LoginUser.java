@@ -2,6 +2,7 @@ package cmy.android_jk_new.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Created by mengyuan.cheng on 2017/6/15.
@@ -9,19 +10,20 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class LoginUser {
     /**
-     * 登录名
+     * 登录名(唯一).
      */
-    private String loginName ;
+    @Unique
+     private String loginName ;
     /**
-     * 登陆密码
+     * 登陆密码.
      */
     private String passWord;
     /**
-     * 指纹信息
+     * 指纹信息.
      */
     private String userFinger;
     /**
-     * 人员类别
+     * 人员类别.
      */
     private String userType;
 

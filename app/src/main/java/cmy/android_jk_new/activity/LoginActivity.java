@@ -3,7 +3,6 @@ package cmy.android_jk_new.activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,26 +14,24 @@ import android.widget.TextView;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import butterknife.ButterKnife;
 import cmy.android_jk_new.R;
 import cmy.android_jk_new.bean.LoginUser;
+import cmy.android_jk_new.constant.DatabaseConstant;
 import cmy.android_jk_new.constant.HttpConstant;
 import cmy.android_jk_new.greendao.DaoMaster;
 import cmy.android_jk_new.greendao.DaoSession;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static cmy.android_jk_new.constant.DatabaseConstant.DATABASE_NAME;
-
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-
-
     // UI references
     private AutoCompleteTextView mLoginName;
 
@@ -77,16 +74,17 @@ public class LoginActivity extends AppCompatActivity {
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
-                                    Log.i("test", "" + s);
-                                    Log.i("test", "" + call);
-                                    Log.i("test", "" + response);
+                                    Logger.i(s);
+                                    Logger.i("" + call);
+                                    Logger.i("" + response);
                                 }
+
                                 @Override
                                 public void onError(Call call, Response response, Exception e) {
                                     super.onError(call, response, e);
-                                    Log.i("test", "" + e);
-                                    Log.i("test", "" + call);
-                                    Log.i("test", "" + response);
+                                    Logger.i("" + e);
+                                    Logger.i("" + call);
+                                    Logger.i("" + response);
                                 }
                             });
                 } catch (Exception e) {
@@ -99,7 +97,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupDatabase() {
         //创建数据库
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_NAME, null);
+        DaoMaster.DevOpenHelper helper =
+                new DaoMaster.DevOpenHelper(this, DatabaseConstant.DATABASE_NAME, null);
         //获取可写数据库
         SQLiteDatabase db = helper.getWritableDatabase();
         //获取数据库对象
@@ -117,12 +116,13 @@ public class LoginActivity extends AppCompatActivity {
         QueryBuilder qb = daoSession.queryBuilder(LoginUser.class);
         qb.list();
 
-        Log.d("test", "" + qb.list());
+        Logger.d(qb.list());
 
         for (int i = 0; i < qb.list().size(); i++) {
             LoginUser lu = (LoginUser) qb.list().get(i);
-            Log.d("test", lu.getLoginName());
+            Logger.d(lu.getLoginName());
         }
+
     }
 
 }

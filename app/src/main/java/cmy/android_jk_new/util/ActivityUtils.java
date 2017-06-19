@@ -34,7 +34,7 @@ public class ActivityUtils extends Application {
 
     /**
      * 添加activity到容器中.
-     * @param activity.
+     * @param activity
      */
     public void addActivity(final Activity activity) {
         if (!activitys.contains(activity)) {

@@ -28,6 +28,7 @@ public class DataCleanUtils {
      * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache).
      * @param context
      */
+
     public static void cleanInternalCache(final Context context) {
         deleteFilesByDirectory(context.getCacheDir());
     }

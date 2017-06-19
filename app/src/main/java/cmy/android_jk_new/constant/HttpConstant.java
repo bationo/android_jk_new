@@ -4,7 +4,7 @@ package cmy.android_jk_new.constant;
  * @author ：     cmy
  * @version :     2017/5/27.
  * @e-mil ：      mengyuan.cheng.mier@gmail.com
- * @Description :
+ * @Description : 网络连接相关常量
  */
 
 public class HttpConstant {

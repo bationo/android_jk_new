@@ -43,7 +43,7 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"LOGIN_USER\" (" + //
-                "\"LOGIN_NAME\" TEXT," + // 0: loginName
+                "\"LOGIN_NAME\" TEXT UNIQUE ," + // 0: loginName
                 "\"PASS_WORD\" TEXT," + // 1: passWord
                 "\"USER_FINGER\" TEXT," + // 2: userFinger
                 "\"USER_TYPE\" TEXT);"); // 3: userType

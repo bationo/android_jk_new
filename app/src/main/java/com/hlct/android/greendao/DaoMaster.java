@@ -1,4 +1,4 @@
-package cmy.android_jk_new.greendao;
+package com.hlct.android.greendao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

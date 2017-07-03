@@ -1,4 +1,4 @@
-package cmy.android_jk_new.activity;
+package com.hlct.android.activity;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,21 +13,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.hlct.android.R;
+import com.hlct.android.bean.LoginUser;
+import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.constant.HttpConstant;
+import com.hlct.android.greendao.DaoMaster;
+import com.hlct.android.greendao.DaoSession;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import butterknife.ButterKnife;
-import cmy.android_jk_new.R;
-import cmy.android_jk_new.bean.LoginUser;
-import cmy.android_jk_new.constant.HttpConstant;
-import cmy.android_jk_new.greendao.DaoMaster;
-import cmy.android_jk_new.greendao.DaoSession;
 import okhttp3.Call;
 import okhttp3.Response;
-
-import static cmy.android_jk_new.constant.DatabaseConstant.DATABASE_NAME;
 
 /**
  * A login screen that offers login via email/password.
@@ -99,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupDatabase() {
         //创建数据库
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_NAME, null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DatabaseConstant.DATABASE_NAME, null);
         //获取可写数据库
         SQLiteDatabase db = helper.getWritableDatabase();
         //获取数据库对象

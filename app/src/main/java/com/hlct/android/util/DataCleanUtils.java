@@ -1,4 +1,4 @@
-package cmy.android_jk_new.util;
+package com.hlct.android.util;
 
 import android.content.Context;
 import android.os.Environment;

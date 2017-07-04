@@ -22,4 +22,5 @@
     <string name="login_name">登录名</string>
     <string name="password">密码</string>
     <string name="login">登陆</string>
+    <string name="hlct">HLCT</string>
 </resources>

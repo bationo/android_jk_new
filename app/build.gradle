@@ -50,6 +50,7 @@ dependencies {
     //Logger:   简单，漂亮，强大的Android日志工具。
     compile 'com.orhanobut:logger:1.15'
     //greendao依赖
+    compile 'org.greenrobot:greendao-generator:3.2.0'
     compile 'org.greenrobot:greendao:3.2.0'
     //指纹识别Jar依赖
     compile files('libs/serialport.jar')

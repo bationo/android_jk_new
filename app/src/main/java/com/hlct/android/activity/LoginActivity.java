@@ -1,6 +1,5 @@
 package com.hlct.android.activity;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,15 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hlct.android.R;
-import com.hlct.android.bean.LoginUser;
-import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.constant.HttpConstant;
-import com.hlct.android.greendao.DaoMaster;
-import com.hlct.android.greendao.DaoSession;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-
-import org.greenrobot.greendao.query.QueryBuilder;
 
 import butterknife.ButterKnife;
 import okhttp3.Call;
@@ -33,14 +26,10 @@ import okhttp3.Response;
  */
 public class LoginActivity extends AppCompatActivity {
 
-
     // UI references
     private AutoCompleteTextView mLoginName;
-
     private EditText mPasswordView;
 
-    //Dao对象的管理者
-    private static DaoSession daoSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
         OkGo.init(getApplication());
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        setupDatabase();
 
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
@@ -80,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.i("test", "" + call);
                                     Log.i("test", "" + response);
                                 }
+
                                 @Override
                                 public void onError(Call call, Response response, Exception e) {
                                     super.onError(call, response, e);
@@ -96,33 +85,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void setupDatabase() {
-        //创建数据库
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DatabaseConstant.DATABASE_NAME, null);
-        //获取可写数据库
-        SQLiteDatabase db = helper.getWritableDatabase();
-        //获取数据库对象
-        DaoMaster dm = new DaoMaster(db);
-        //获取Dao对象的管理者
-        daoSession = dm.newSession();
-
-        LoginUser loginuser = new LoginUser();
-        loginuser.setLoginName("QWE");
-        loginuser.setPassWord("123");
-        loginuser.setUserFinger("====");
-        loginuser.setUserType("0");
-        daoSession.insert(loginuser);
-
-        QueryBuilder qb = daoSession.queryBuilder(LoginUser.class);
-        qb.list();
-
-        Log.d("test", "" + qb.list());
-
-        for (int i = 0; i < qb.list().size(); i++) {
-            LoginUser lu = (LoginUser) qb.list().get(i);
-            Log.d("test", lu.getLoginName());
-        }
-    }
 
 }
 

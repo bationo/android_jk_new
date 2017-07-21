@@ -1,8 +1,9 @@
 package cmy.android_jk_new.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Unique;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by mengyuan.cheng on 2017/6/15.
@@ -10,14 +11,16 @@ import org.greenrobot.greendao.annotation.Unique;
 @Entity
 public class LoginUser {
     /**
-     * 登录名(唯一).
+     * 登录名(唯一||不为空).
      */
     @Unique
-     private String loginName ;
+    @NotNull
+    private String login_name;
     /**
-     * 登陆密码.
+     * 登陆密码(不为空).
      */
-    private String passWord;
+    @NotNull
+    private String login_password;
     /**
      * 指纹信息.
      */
@@ -27,11 +30,23 @@ public class LoginUser {
      */
     private String userType;
 
-    @Generated(hash = 1917159828)
-    public LoginUser(String loginName, String passWord, String userFinger,
-            String userType) {
-        this.loginName = loginName;
-        this.passWord = passWord;
+    public LoginUser(String login_name, String login_password) {
+        this.login_name = login_name;
+        this.login_password = login_password;
+    }
+
+    public LoginUser(String login_name, String login_password, String userFinger) {
+        this.login_name = login_name;
+        this.login_password = login_password;
+        this.userFinger = userFinger;
+    }
+
+
+    @Generated(hash = 1521885696)
+    public LoginUser(@NotNull String login_name, @NotNull String login_password,
+                     String userFinger, String userType) {
+        this.login_name = login_name;
+        this.login_password = login_password;
         this.userFinger = userFinger;
         this.userType = userType;
     }
@@ -40,20 +55,20 @@ public class LoginUser {
     public LoginUser() {
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getLogin_name() {
+        return login_name;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
+    public void setLogin_name(String login_name) {
+        this.login_name = login_name;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getLogin_password() {
+        return login_password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setLogin_password(String login_password) {
+        this.login_password = login_password;
     }
 
     public String getUserFinger() {

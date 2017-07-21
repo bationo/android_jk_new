@@ -24,8 +24,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property LoginName = new Property(0, String.class, "loginName", false, "LOGIN_NAME");
-        public final static Property PassWord = new Property(1, String.class, "passWord", false, "PASS_WORD");
+        public final static Property Login_name = new Property(0, String.class, "login_name", false, "LOGIN_NAME");
+        public final static Property Login_password = new Property(1, String.class, "login_password", false, "LOGIN_PASSWORD");
         public final static Property UserFinger = new Property(2, String.class, "userFinger", false, "USER_FINGER");
         public final static Property UserType = new Property(3, String.class, "userType", false, "USER_TYPE");
     }
@@ -43,8 +43,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"LOGIN_USER\" (" + //
-                "\"LOGIN_NAME\" TEXT UNIQUE ," + // 0: loginName
-                "\"PASS_WORD\" TEXT," + // 1: passWord
+                "\"LOGIN_NAME\" TEXT NOT NULL UNIQUE ," + // 0: login_name
+                "\"LOGIN_PASSWORD\" TEXT NOT NULL ," + // 1: login_password
                 "\"USER_FINGER\" TEXT," + // 2: userFinger
                 "\"USER_TYPE\" TEXT);"); // 3: userType
     }
@@ -58,16 +58,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, LoginUser entity) {
         stmt.clearBindings();
- 
-        String loginName = entity.getLoginName();
-        if (loginName != null) {
-            stmt.bindString(1, loginName);
-        }
- 
-        String passWord = entity.getPassWord();
-        if (passWord != null) {
-            stmt.bindString(2, passWord);
-        }
+        stmt.bindString(1, entity.getLogin_name());
+        stmt.bindString(2, entity.getLogin_password());
  
         String userFinger = entity.getUserFinger();
         if (userFinger != null) {
@@ -83,16 +75,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, LoginUser entity) {
         stmt.clearBindings();
- 
-        String loginName = entity.getLoginName();
-        if (loginName != null) {
-            stmt.bindString(1, loginName);
-        }
- 
-        String passWord = entity.getPassWord();
-        if (passWord != null) {
-            stmt.bindString(2, passWord);
-        }
+        stmt.bindString(1, entity.getLogin_name());
+        stmt.bindString(2, entity.getLogin_password());
  
         String userFinger = entity.getUserFinger();
         if (userFinger != null) {
@@ -113,8 +97,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
     @Override
     public LoginUser readEntity(Cursor cursor, int offset) {
         LoginUser entity = new LoginUser( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // loginName
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // passWord
+            cursor.getString(offset + 0), // login_name
+            cursor.getString(offset + 1), // login_password
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // userFinger
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // userType
         );
@@ -123,8 +107,8 @@ public class LoginUserDao extends AbstractDao<LoginUser, Void> {
      
     @Override
     public void readEntity(Cursor cursor, LoginUser entity, int offset) {
-        entity.setLoginName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setPassWord(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setLogin_name(cursor.getString(offset + 0));
+        entity.setLogin_password(cursor.getString(offset + 1));
         entity.setUserFinger(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setUserType(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }

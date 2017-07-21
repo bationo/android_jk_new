@@ -1,5 +1,6 @@
 package cmy.android_jk_new.activity;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,21 +13,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import butterknife.ButterKnife;
+import cmy.android_jk_new.APIService;
 import cmy.android_jk_new.R;
-import cmy.android_jk_new.bean.LoginUser;
+import cmy.android_jk_new.bean.BankInfo;
+import cmy.android_jk_new.bean.ResultInfo;
 import cmy.android_jk_new.constant.DatabaseConstant;
-import cmy.android_jk_new.constant.HttpConstant;
 import cmy.android_jk_new.greendao.DaoMaster;
 import cmy.android_jk_new.greendao.DaoSession;
-import okhttp3.Call;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static cmy.android_jk_new.constant.HttpConstant.BASE_SERVER_URL;
+import static cmy.android_jk_new.util.SnackbarUtil.showSnackbar;
 
 /**
  * A login screen that offers login via email/password.
@@ -37,16 +42,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mPasswordView;
 
+    //账号和密码
+    private String LOGINNAME;
+    private String PASSWORD;
+
     //Dao对象的管理者
     private static DaoSession daoSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OkGo.init(getApplication());
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-        setupDatabase();
+        //        setupDatabase();
 
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
@@ -67,34 +74,60 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    OkGo.post(HttpConstant.URL_PDA_LOGIN)
-                            .params("login_name", "12")
-                            .params("login_password", "123456")
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onSuccess(String s, Call call, Response response) {
-                                    Logger.i(s);
-                                    Logger.i("" + call);
-                                    Logger.i("" + response);
-                                }
-
-                                @Override
-                                public void onError(Call call, Response response, Exception e) {
-                                    super.onError(call, response, e);
-                                    Logger.i("" + e);
-                                    Logger.i("" + call);
-                                    Logger.i("" + response);
-                                }
-                            });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                doLogin();
             }
         });
 
     }
 
+    private void doLogin() {
+        //获取输入的账号密码
+        LOGINNAME = mLoginName.getText().toString();
+        PASSWORD = mPasswordView.getText().toString();
+        Retrofit retrofit = new Retrofit.Builder()
+                // 设置网络请求的Url地址
+                .baseUrl(BASE_SERVER_URL)
+                // 设置数据解析器
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        // 创建 网络请求接口 的实例
+        APIService apiService = retrofit.create(APIService.class);
+        //对发送请求进行封装
+        Call<ResultInfo> call = apiService.login(LOGINNAME, PASSWORD);
+        //发送网络请求(异步)
+        call.enqueue(new Callback<ResultInfo>() {
+            //请求成功时回调
+            @Override
+            public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                Logger.d(response.body().getMessage());
+                Logger.d(response.body().getCode());
+                Logger.d(response.body().getText());
+                String flag = response.body().getCode();//返回码
+                String msg = response.body().getMessage();//提示信息
+                //如果登陆成功
+                if (flag.equals(ResultInfo.CODE_SUCCESS)) {
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    showSnackbar(getWindow().getDecorView(), msg);
+                } else if (flag.equals(ResultInfo.CODE_ERROR)) {
+                    showSnackbar(getWindow().getDecorView(), msg);
+                }
+
+            }
+
+            //请求失败时回调
+            @Override
+            public void onFailure(Call<ResultInfo> call, Throwable t) {
+                t.printStackTrace();
+                showSnackbar(getWindow().getDecorView(), "访问服务器失败！");
+            }
+        });
+    }
+
+    /**
+     * 数据库相关
+     */
     private void setupDatabase() {
         //创建数据库
         DaoMaster.DevOpenHelper helper =
@@ -106,24 +139,41 @@ public class LoginActivity extends AppCompatActivity {
         //获取Dao对象的管理者
         daoSession = dm.newSession();
 
-        LoginUser loginuser = new LoginUser();
-        loginuser.setLoginName("QWE");
-        loginuser.setPassWord("123");
-        loginuser.setUserFinger("====");
-        loginuser.setUserType("0");
-        daoSession.insert(loginuser);
+        BankInfo bankInfo = new BankInfo();
 
-        QueryBuilder qb = daoSession.queryBuilder(LoginUser.class);
+        bankInfo.setBankId(1L);
+        bankInfo.setBankName("招商银行华侨城支行");
+        bankInfo.setBankTaskStatus("未完成");
+        bankInfo.setLineId("A线路");
+        //存入数据库
+        daoSession.insert(bankInfo);
+        //查询数据
+        QueryBuilder qb = daoSession.queryBuilder(BankInfo.class);
         qb.list();
-
         Logger.d(qb.list());
-
         for (int i = 0; i < qb.list().size(); i++) {
-            LoginUser lu = (LoginUser) qb.list().get(i);
-            Logger.d(lu.getLoginName());
+            BankInfo bl = (BankInfo) qb.list().get(i);
+            Logger.d(bl.getBankName());
         }
+        //修改数据
+        bankInfo.setBankName("华夏银行华侨城支行");
+        daoSession.update(bankInfo);
 
+        //删除数据
+        daoSession.delete(BankInfo.class);
     }
+
+
+    //    private void showSnackbar(View view, String msg) {
+    //        Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_LONG)
+    //                .setAction("确定", new OnClickListener() {
+    //                    @Override
+    //                    public void onClick(View view) {
+    //
+    //                    }
+    //                }).show();
+    //    }
+
 
 }
 

@@ -17,13 +17,14 @@ import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import cmy.android_jk_new.http.APIService;
 import cmy.android_jk_new.R;
 import cmy.android_jk_new.bean.BankInfo;
 import cmy.android_jk_new.bean.ResultInfo;
 import cmy.android_jk_new.constant.DatabaseConstant;
 import cmy.android_jk_new.greendao.DaoMaster;
 import cmy.android_jk_new.greendao.DaoSession;
+import cmy.android_jk_new.http.APIService;
+import cmy.android_jk_new.util.ActivityUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActivityUtils.getInstance().addActivity(this);
         //        setupDatabase();
 
         // Set up the login form.
@@ -109,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
-                    showSnackbar(getWindow().getDecorView(), msg);
+                    finish();
                 } else if (flag.equals(ResultInfo.CODE_ERROR)) {
                     showSnackbar(getWindow().getDecorView(), msg);
                 }

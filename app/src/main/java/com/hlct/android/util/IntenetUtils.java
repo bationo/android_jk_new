@@ -1,4 +1,4 @@
-package cmy.android_jk_new.util;
+package com.hlct.android.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -17,18 +17,18 @@ public class IntenetUtils {
     /**
      * 没有网络连接
      */
-    public static final int NETWORN_NONE = 0;
+    public static final int NETWORK_NONE = 0;
     /**
      * wifi连接
      */
-    public static final int NETWORN_WIFI = 1;
+    public static final int NETWORK_WIFI = 1;
     /**
      * 手机数据连接
      */
-    public static final int NETWORN_2G = 2;
-    public static final int NETWORN_3G = 3;
-    public static final int NETWORN_4G = 4;
-    public static final int NETWORN_MOBILE = 5;
+    public static final int NETWORK_2G = 2;
+    public static final int NETWORK_3G = 3;
+    public static final int NETWORK_4G = 4;
+    public static final int NETWORK_MOBILE = 5;
 
     /**
      * 获取当前网络连接类型
@@ -41,12 +41,12 @@ public class IntenetUtils {
 
         //如果当前没有网络
         if (null == connManager)
-            return NETWORN_NONE;
+            return NETWORK_NONE;
 
         //获取当前网络类型，如果为空，返回无网络
         NetworkInfo activeNetInfo = connManager.getActiveNetworkInfo();
         if (activeNetInfo == null || !activeNetInfo.isAvailable()) {
-            return NETWORN_NONE;
+            return NETWORK_NONE;
         }
 
         // 判断是不是连接的是不是wifi
@@ -55,7 +55,7 @@ public class IntenetUtils {
             NetworkInfo.State state = wifiInfo.getState();
             if (null != state)
                 if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
-                    return NETWORN_WIFI;
+                    return NETWORK_WIFI;
                 }
         }
 
@@ -74,7 +74,7 @@ public class IntenetUtils {
                         case TelephonyManager.NETWORK_TYPE_EDGE: // 移动2g
                         case TelephonyManager.NETWORK_TYPE_1xRTT:
                         case TelephonyManager.NETWORK_TYPE_IDEN:
-                            return NETWORN_2G;
+                            return NETWORK_2G;
                         //如果是3g类型
                         case TelephonyManager.NETWORK_TYPE_EVDO_A: // 电信3g
                         case TelephonyManager.NETWORK_TYPE_UMTS:
@@ -85,20 +85,20 @@ public class IntenetUtils {
                         case TelephonyManager.NETWORK_TYPE_EVDO_B:
                         case TelephonyManager.NETWORK_TYPE_EHRPD:
                         case TelephonyManager.NETWORK_TYPE_HSPAP:
-                            return NETWORN_3G;
+                            return NETWORK_3G;
                         //如果是4g类型
                         case TelephonyManager.NETWORK_TYPE_LTE:
-                            return NETWORN_4G;
+                            return NETWORK_4G;
                         default:
                             //中国移动 联通 电信 三种3G制式
                             if (strSubTypeName.equalsIgnoreCase("TD-SCDMA") || strSubTypeName.equalsIgnoreCase("WCDMA") || strSubTypeName.equalsIgnoreCase("CDMA2000")) {
-                                return NETWORN_3G;
+                                return NETWORK_3G;
                             } else {
-                                return NETWORN_MOBILE;
+                                return NETWORK_MOBILE;
                             }
                     }
                 }
         }
-        return NETWORN_NONE;
+        return NETWORK_NONE;
     }
 }

@@ -55,3 +55,6 @@ freeline/
 freeline_project_description.json
 /local.properties
 /.idea/runConfigurations.xml
+/app/src/androidTest/
+/app/src/test/
+

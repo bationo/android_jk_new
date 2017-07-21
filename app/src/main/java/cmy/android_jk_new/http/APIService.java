@@ -1,4 +1,4 @@
-package cmy.android_jk_new;
+package cmy.android_jk_new.http;
 
 import cmy.android_jk_new.bean.ResultInfo;
 import retrofit2.Call;

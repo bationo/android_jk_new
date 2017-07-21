@@ -17,7 +17,7 @@ import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
-import cmy.android_jk_new.APIService;
+import cmy.android_jk_new.http.APIService;
 import cmy.android_jk_new.R;
 import cmy.android_jk_new.bean.BankInfo;
 import cmy.android_jk_new.bean.ResultInfo;

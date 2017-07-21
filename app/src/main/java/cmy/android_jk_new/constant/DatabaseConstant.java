@@ -1,4 +1,4 @@
-package com.hlct.android.constant;
+package cmy.android_jk_new.constant;
 
 /**
  * Created by mengyuan.cheng on 2017/6/15.

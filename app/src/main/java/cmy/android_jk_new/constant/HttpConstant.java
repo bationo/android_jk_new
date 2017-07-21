@@ -1,4 +1,4 @@
-package com.hlct.android.constant;
+package cmy.android_jk_new.constant;
 
 /**
  * @author ：     cmy

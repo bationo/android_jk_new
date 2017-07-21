@@ -1,4 +1,4 @@
-package com.hlct.android.util;
+package cmy.android_jk_new.util;
 
 import android.app.Activity;
 import android.app.Application;

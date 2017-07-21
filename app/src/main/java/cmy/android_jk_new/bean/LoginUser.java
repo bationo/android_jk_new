@@ -1,4 +1,4 @@
-package com.hlct.android.bean;
+package cmy.android_jk_new.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.NotNull;

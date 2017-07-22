@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.hlct.android.R;
 import com.hlct.android.bean.BankInfo;
 import com.hlct.android.bean.ResultInfo;
@@ -20,6 +21,8 @@ import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoMaster;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.http.APIService;
+import com.hlct.android.util.ActivityUtils;
+import com.hlct.android.util.IntenetUtils;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -31,8 +34,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.hlct.android.constant.HttpConstant.BASE_SERVER_URL;
+import static com.hlct.android.util.IntenetUtils.NETWORN_2G;
+import static com.hlct.android.util.IntenetUtils.NETWORN_NONE;
 import static com.hlct.android.util.SnackbarUtil.showSnackbar;
-
 
 
 /**
@@ -51,10 +55,16 @@ public class LoginActivity extends AppCompatActivity {
     //Dao对象的管理者
     private static DaoSession daoSession;
 
+    //等待的Dialog
+    private MaterialDialog materialDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActivityUtils.getInstance().addActivity(this);
+        //Dialog
         //        setupDatabase();
 
         // Set up the login form.
@@ -76,10 +86,15 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                materialDialog = new MaterialDialog.Builder(LoginActivity.this)
+                        .title("正在登陆")
+                        .content("请稍后")
+                        .progress(true, 0)
+                        .cancelable(false)
+                        .show();
                 doLogin();
             }
         });
-
     }
 
     private void doLogin() {
@@ -101,9 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             //请求成功时回调
             @Override
             public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
-                Logger.d(response.body().getMessage());
-                Logger.d(response.body().getCode());
-                Logger.d(response.body().getText());
+                materialDialog.dismiss();
                 String flag = response.body().getCode();//返回码
                 String msg = response.body().getMessage();//提示信息
                 //如果登陆成功
@@ -115,16 +128,26 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (flag.equals(ResultInfo.CODE_ERROR)) {
                     showSnackbar(getWindow().getDecorView(), msg);
                 }
-
             }
 
             //请求失败时回调
             @Override
             public void onFailure(Call<ResultInfo> call, Throwable t) {
+                materialDialog.dismiss();
                 t.printStackTrace();
-                showSnackbar(getWindow().getDecorView(), "访问服务器失败！");
+                switch (IntenetUtils.getNetworkState(getApplicationContext())) {
+                    case NETWORN_NONE:
+                        showSnackbar(getWindow().getDecorView(), "请打开网络数据连接");
+                        break;
+                    case NETWORN_2G:
+                        showSnackbar(getWindow().getDecorView(), "当前网络连接质量不佳");
+                        break;
+                    default:
+                        showSnackbar(getWindow().getDecorView(), "无法连接服务器");
+                }
             }
         });
+
     }
 
     /**
@@ -164,18 +187,6 @@ public class LoginActivity extends AppCompatActivity {
         //删除数据
         daoSession.delete(BankInfo.class);
     }
-
-
-    //    private void showSnackbar(View view, String msg) {
-    //        Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_LONG)
-    //                .setAction("确定", new OnClickListener() {
-    //                    @Override
-    //                    public void onClick(View view) {
-    //
-    //                    }
-    //                }).show();
-    //    }
-
 
 }
 

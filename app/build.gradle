@@ -27,7 +27,7 @@ android {
 greendao {
     //版本号，升级时可配置
     schemaVersion 1
-    daoPackage 'com.hlct.android.greendao'
+    daoPackage 'cmy.android_jk_new.greendao'
     targetGenDir 'src/main/java'
 }
 
@@ -36,16 +36,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //ButterKnife:  将Android视图和回调方法绑定到字段和方法上。
     //Logger:   简单，漂亮，强大的Android日志工具。
+    compile 'com.orhanobut:logger:1.15'
     //指纹识别Jar依赖
     compile files('libs/serialport.jar')
     compile files('libs/usb06fp.jar')
-    //DialogUtils material风格和ios风格的dialog,可传入 context 构建。
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    //DialogUtils
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     // Retrofit库
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     //Gson数据解析器
@@ -53,10 +50,13 @@ dependencies {
     // Okhttp库
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
     //Gson: 一个Java序列化/反序列化库，可以将JSON和java对象互相转换。
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    //数据库
     compile 'io.github.openfeign:feign-gson:9.4.0'
-    compile 'com.orhanobut:logger:1.15'
     compile 'org.greenrobot:greendao:3.2.0'
-    compile 'com.github.glassLake:DialogUtils:1.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

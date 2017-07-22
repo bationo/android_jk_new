@@ -9,18 +9,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.hlct.android.R;
+import com.hlct.android.util.ActivityUtils;
+
+import static com.hlct.android.util.SnackbarUtil.showSnackbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    //退出时间标志.
+    private long mExitTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActivityUtils.getInstance().addActivity(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -77,5 +86,23 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 双击返回退出
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Log.d("onKeyDown", "" + keyCode);
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                showSnackbar(getWindow().getDecorView(), "再按一次退出");
+                mExitTime = System.currentTimeMillis();
+            } else {
+                ActivityUtils.getInstance().destory();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

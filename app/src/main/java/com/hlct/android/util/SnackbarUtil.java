@@ -7,7 +7,7 @@ import android.view.View;
  * @Author : mengyuan.cheng
  * @Version : 2017/7/21
  * @E-mail : mengyuan.cheng.mier@gmail.com
- * @Description :
+ * @Description : Snackbar工具类
  */
 
 public class SnackbarUtil {

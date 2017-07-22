@@ -17,11 +17,6 @@ import static com.hlct.android.constant.HttpConstant.URL_PDA_LOGIN;
  */
 
 public interface APIService {
-    /**
-     * 获取登陆信息的返回
-     *
-     * @return ResultInfo
-     */
     @FormUrlEncoded
     @POST(URL_PDA_LOGIN)
     Call<ResultInfo> login(@Field("login_name") String login_name,

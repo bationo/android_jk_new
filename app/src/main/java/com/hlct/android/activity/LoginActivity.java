@@ -16,13 +16,14 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.hlct.android.R;
 import com.hlct.android.bean.BankInfo;
-import com.hlct.android.bean.ResultInfo;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoMaster;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.http.APIService;
 import com.hlct.android.util.ActivityUtils;
+import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.IntenetUtils;
+import com.hlct.framework.pda.common.entity.ResultInfo;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -33,7 +34,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.hlct.android.constant.DatabaseConstant.FILE_PATH;
 import static com.hlct.android.constant.HttpConstant.BASE_SERVER_URL;
+import static com.hlct.android.constant.HttpConstant.flag;
 import static com.hlct.android.util.IntenetUtils.NETWORN_2G;
 import static com.hlct.android.util.IntenetUtils.NETWORN_NONE;
 import static com.hlct.android.util.SnackbarUtil.showSnackbar;
@@ -58,13 +61,15 @@ public class LoginActivity extends AppCompatActivity {
     //等待的Dialog
     private MaterialDialog materialDialog;
 
+    //时间戳
+    private String date = FileUtils.getDate();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ActivityUtils.getInstance().addActivity(this);
-        //Dialog
         //        setupDatabase();
 
         // Set up the login form.
@@ -92,12 +97,27 @@ public class LoginActivity extends AppCompatActivity {
                         .progress(true, 0)
                         .cancelable(false)
                         .show();
-                doLogin();
+                if (flag.equals("net")) {
+                    doNetLogin();
+                } else if (flag.equals("file")) {
+                    doFileLogin();
+                }
             }
         });
     }
 
-    private void doLogin() {
+    /**
+     * 通过文件解析文件进行登陆
+     */
+    private void doFileLogin() {
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo = (ResultInfo) FileUtils.readString(FILE_PATH + date + "WDRW.dat");
+    }
+
+    /**
+     * 通过网络进行操作
+     */
+    private void doNetLogin() {
         //获取输入的账号密码
         LOGINNAME = mLoginName.getText().toString();
         PASSWORD = mPasswordView.getText().toString();

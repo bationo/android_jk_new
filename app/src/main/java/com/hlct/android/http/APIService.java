@@ -1,6 +1,6 @@
 package com.hlct.android.http;
 
-import com.hlct.android.bean.ResultInfo;
+import com.hlct.framework.pda.common.entity.ResultInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Field;

@@ -1,4 +1,5 @@
-package com.hlct.android.bean;
+package com.hlct.framework.pda.common.entity;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,17 +11,27 @@ import org.json.JSONObject;
  * @Description : 用于接受服务器返回数据的类
  */
 
-public class ResultInfo {
+public class ResultInfo implements java.io.Serializable {
+    private static final long serialVersionUID = 7981560250804078637L;
     public static final String CODE_SUCCESS = "1";
     public static final String CODE_ERROR = "2";
     private String code;
     private String message;
+    //    private PdaLoginMessage pdaLogMessge;
     /**
      * 数据信息
      */
     private String text;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
+
+    //    public PdaLoginMessage getPdaLogMessge() {
+    //        return pdaLogMessge;
+    //    }
+    //
+    //    public void setPdaLogMessge(PdaLoginMessage pdaLogMessge) {
+    //        this.pdaLogMessge = pdaLogMessge;
+    //    }
 
     public ResultInfo() {
 

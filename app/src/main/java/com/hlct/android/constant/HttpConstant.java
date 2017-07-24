@@ -15,7 +15,11 @@ public class HttpConstant {
     protected HttpConstant() {
         throw new UnsupportedOperationException();
     }
-
+    /**
+     * 网络登陆或者本地登陆
+     */
+    public static final String flag = "file";
+//    public static final String flag = "net";
     /**
      * 服务器地址.
      */

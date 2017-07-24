@@ -33,10 +33,10 @@ public class FingerUtils {
      * @param activity      activity是因为需要接收获取USB授权操作后的返回
      * @param iUsbConnState iUsbConnState实现IUsbConnState接口，
      *                      用于接收USB指纹模组的授权状态和连接状态
-     * @return String类型的成功或失败信息
+     * @return String
      */
     private static String init(final Activity activity,
-                            final IUsbConnState iUsbConnState) {
+                               final IUsbConnState iUsbConnState) {
         mFingerHelper = new FingerHelper(activity, iUsbConnState);
         returnCode = mFingerHelper.init();
         msg = disposeReturnCode(returnCode);
@@ -45,7 +45,8 @@ public class FingerUtils {
 
     /**
      * 连接USB指纹模组.
-     * @return
+     *
+     * @return String
      */
     private static String connectFingerDev() {
         // FIXME: 2017/6/19 阅读示例代码，根据授权的不同给出不同的提示.
@@ -64,7 +65,7 @@ public class FingerUtils {
      * @return Sring类型的提示
      */
     private static String disposeReturnCode(final int returnCode) {
-        String error_msg = null;
+        String error_msg;
         switch (returnCode) {
             case (0x00):
                 error_msg = "操作成功";

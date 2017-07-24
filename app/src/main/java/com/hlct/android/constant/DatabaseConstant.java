@@ -11,9 +11,13 @@ public class DatabaseConstant {
     protected DatabaseConstant() {
         throw new UnsupportedOperationException();
     }
+
+    /**
+     * 文件存放地址
+     */
+    public static final String FILE_PATH = "";
     /**
      * 数据库名称.
      */
     public static final String DATABASE_NAME = "hlct.db";
-
 }

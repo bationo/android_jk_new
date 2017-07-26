@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.hlct.android.R;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PropertyPlan;
+import com.hlct.android.bean.ResultInfo;
 import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoMaster;
@@ -29,7 +30,6 @@ import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
-import com.hlct.android.bean.ResultInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;

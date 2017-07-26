@@ -1,4 +1,4 @@
-package com.hlct.framework.pda.common.entity;
+package com.hlct.android.bean;
 
 
 import org.json.JSONArray;

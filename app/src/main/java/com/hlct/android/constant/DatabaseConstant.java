@@ -15,7 +15,7 @@ public class DatabaseConstant {
     /**
      * 文件存放地址
      */
-    public static final String FILE_PATH = "";
+    public static final String FILE_PATH = "/sdcard/Download/";
     /**
      * 数据库名称.
      */

@@ -1,16 +1,13 @@
 package com.hlct.android.util;
 
-import android.util.Log;
-
-import com.hlct.framework.pda.common.entity.ResultInfo;
-
+import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,17 +19,30 @@ import java.util.Date;
  */
 
 public class FileUtils {
+
+    private static final String LINE_SEP = System.getProperty("line.separator");
+
     /**
-     * 判断文件是否存在
-     *
-     * @param path：文件路径
-     * @return boolean
+     * @param file
+     * @return
      */
-    public static boolean isExist(String path) {
-        File file = new File(path);
-        boolean status = file.exists();
-        Log.d("isExist", "" + status);
-        return status;
+    private static boolean isFileExists(final File file) {
+        return file != null && file.exists();
+    }
+
+    /**
+     * @param s
+     * @return
+     */
+    private static boolean isSpace(final String s) {
+        if (s == null)
+            return true;
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -90,29 +100,39 @@ public class FileUtils {
     }
 
     /**
-     * 从文件中读取数据，返回类型是ResultInfo类型
+     * 将文本文件中的内容读入到buffer中
      *
-     * @param file 文件路径
-     * @return
+     * @param buffer   buffer
+     * @param filePath 文件路径
+     * @throws IOException 异常
      */
-    public static Object readString(String file) {
-        ResultInfo ret = null;
-        FileInputStream in;
-        try {
-            in = new FileInputStream(file);
-            ObjectInputStream obj = new ObjectInputStream(in);
-            ret = (ResultInfo) obj.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+    public static void readToBuffer(StringBuffer buffer, String filePath) throws IOException {
+        InputStream is = new FileInputStream(filePath);
+        String line; // 用来保存每行读取的内容
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        line = reader.readLine(); // 读取第一行
+        while (line != null) { // 如果 line 为空说明读完了
+            buffer.append(line); // 将读到的内容添加到 buffer 中
+            buffer.append("\n"); // 添加换行符
+            line = reader.readLine(); // 读取下一行
         }
-        return ret;
+        reader.close();
+        is.close();
     }
+
+    /**
+     * 读取文本文件内容
+     *
+     * @param filePath 文件所在路径
+     * @return 文本内容
+     * @throws IOException 异常
+     */
+    public static String readFile(String filePath) throws IOException {
+        StringBuffer sb = new StringBuffer();
+        FileUtils.readToBuffer(sb, filePath);
+        return sb.toString();
+    }
+
 
     /**
      * 获取时间戳
@@ -129,5 +149,24 @@ public class FileUtils {
             e.printStackTrace();
         }
         return str;
+    }
+
+    /**
+     * 关闭IO
+     *
+     * @param closeables closeables
+     */
+    public static void closeIO(final Closeable... closeables) {
+        if (closeables == null)
+            return;
+        for (Closeable closeable : closeables) {
+            if (closeable != null) {
+                try {
+                    closeable.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

@@ -21,7 +21,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        //DialogUtils material风格和ios风格的dialog,可传入 context 构建。
         maven { url "https://jitpack.io" }
     }
 }

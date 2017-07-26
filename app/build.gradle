@@ -8,7 +8,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "cmy.android_jk_new"
+        applicationId "com.hlct.android"
         minSdkVersion 18
         targetSdkVersion 24
         versionCode 1
@@ -27,20 +27,18 @@ android {
 greendao {
     //版本号，升级时可配置
     schemaVersion 1
-    daoPackage 'cmy.android_jk_new.greendao'
+    daoPackage 'com.hlct.android.greendao'
     targetGenDir 'src/main/java'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     //Logger:   简单，漂亮，强大的Android日志工具。
     compile 'com.orhanobut:logger:1.15'
     //指纹识别Jar依赖
     compile files('libs/serialport.jar')
     compile files('libs/usb06fp.jar')
+    compile files('commons-codec-1.4.jar')
     //DialogUtils
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     // Retrofit库
@@ -58,5 +56,5 @@ dependencies {
     compile 'io.github.openfeign:feign-gson:9.4.0'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+    compile 'junit:junit:4.12'
 }

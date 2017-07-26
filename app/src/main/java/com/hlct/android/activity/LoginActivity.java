@@ -2,6 +2,7 @@ package com.hlct.android.activity;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -14,19 +15,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
 import com.hlct.android.R;
-import com.hlct.android.bean.BankInfo;
+import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.PropertyPlan;
+import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoMaster;
 import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.UserDao;
 import com.hlct.android.http.APIService;
 import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.IntenetUtils;
+import com.hlct.android.util.SecurityUtils;
 import com.hlct.framework.pda.common.entity.ResultInfo;
-import com.orhanobut.logger.Logger;
 
-import org.greenrobot.greendao.query.QueryBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ActivityUtils.getInstance().addActivity(this);
-        //        setupDatabase();
+        setupDatabase();
 
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
@@ -91,12 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                materialDialog = new MaterialDialog.Builder(LoginActivity.this)
-                        .title("正在登陆")
-                        .content("请稍后")
-                        .progress(true, 0)
-                        .cancelable(false)
-                        .show();
                 if (flag.equals("net")) {
                     doNetLogin();
                 } else if (flag.equals("file")) {
@@ -106,18 +107,37 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void test() {
+        List<String> l = new ArrayList<>();
+        l.add("123456");
+        l.add("123");
+        l.add("123");
+        l.add("123");
+        l.add("123");
+        for (int i = 0; i < l.size(); i++) {
+            String s = SecurityUtils.encryptAES(l.get(i));
+            l.add(s);
+        }
+    }
+
     /**
      * 通过文件解析文件进行登陆
      */
-    private void doFileLogin() {
-        ResultInfo resultInfo = new ResultInfo();
-        resultInfo = (ResultInfo) FileUtils.readString(FILE_PATH + date + "WDRW.dat");
+    public void doFileLogin() {
+        mAsyncTask mAsyncTask = new mAsyncTask();
+        mAsyncTask.execute();
     }
 
     /**
      * 通过网络进行操作
      */
     private void doNetLogin() {
+        materialDialog = new MaterialDialog.Builder(LoginActivity.this)
+                .title("正在登陆")
+                .content("请稍后")
+                .progress(true, 0)
+                .cancelable(false)
+                .show();
         //获取输入的账号密码
         LOGINNAME = mLoginName.getText().toString();
         PASSWORD = mPasswordView.getText().toString();
@@ -184,29 +204,125 @@ public class LoginActivity extends AppCompatActivity {
         //获取Dao对象的管理者
         daoSession = dm.newSession();
 
-        BankInfo bankInfo = new BankInfo();
-
-        bankInfo.setBankId(1L);
-        bankInfo.setBankName("招商银行华侨城支行");
-        bankInfo.setBankTaskStatus("未完成");
-        bankInfo.setLineId("A线路");
-        //存入数据库
-        daoSession.insert(bankInfo);
-        //查询数据
-        QueryBuilder qb = daoSession.queryBuilder(BankInfo.class);
-        qb.list();
-        Logger.d(qb.list());
-        for (int i = 0; i < qb.list().size(); i++) {
-            BankInfo bl = (BankInfo) qb.list().get(i);
-            Logger.d(bl.getBankName());
-        }
-        //修改数据
-        bankInfo.setBankName("华夏银行华侨城支行");
-        daoSession.update(bankInfo);
-
-        //删除数据
-        daoSession.delete(BankInfo.class);
+        //        BankInfo bankInfo = new BankInfo();
+        //
+        //        bankInfo.setBankId(1L);
+        //        bankInfo.setBankName("招商银行华侨城支行");
+        //        bankInfo.setBankTaskStatus("未完成");
+        //        bankInfo.setLineId("A线路");
+        //        //存入数据库
+        //        daoSession.insert(bankInfo);
+        //        //查询数据
+        //                QueryBuilder qb = daoSession.queryBuilder(BankInfo.class);
+        //        qb.list();
+        //        Logger.d(qb.list());
+        //        for (int i = 0; i < qb.list().size(); i++) {
+        //            BankInfo bl = (BankInfo) qb.list().get(i);
+        //            Logger.d(bl.getBankName());
+        //        }
+        //        //修改数据
+        //        bankInfo.setBankName("华夏银行华侨城支行");
+        //        daoSession.update(bankInfo);
+        //
+        //        //删除数据
+        //        daoSession.delete(BankInfo.class);
     }
 
+    private class mAsyncTask extends AsyncTask<String, Integer, String> {
+
+        /**
+         * 执行后台任务前的UI操作
+         */
+        @Override
+        protected void onPreExecute() {
+            //获取输入的账号密码
+            LOGINNAME = mLoginName.getText().toString();
+            //加密
+            //            PASSWORD = SecurityUtils.encryptAES("123");
+            PASSWORD = SecurityUtils.getMD5(mPasswordView.getText().toString());
+            //弹出提示
+            materialDialog = new MaterialDialog.Builder(LoginActivity.this)
+                    .title("正在解析当前文件")
+                    .content("请稍后")
+                    .progress(true, 0)
+                    .cancelable(false)
+                    .show();
+            super.onPreExecute();
+        }
+
+        /**
+         * 后台任务
+         *
+         * @param strings
+         * @return string
+         */
+        @Override
+        protected String doInBackground(String... strings) {
+            //解析数据,放入实体类中
+            PropertyPlan p = new PropertyPlan();
+            String str;
+            Gson gson = new Gson();
+
+            String msg = "test";
+            try {
+                str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
+                p = gson.fromJson(str, PropertyPlan.class);
+            } catch (IOException e) {
+                msg = "当前文件有误!";
+                e.printStackTrace();
+            }
+            if (msg.equals("当前文件有误!")) {
+
+            } else {
+                //清空当前数据库
+                daoSession.deleteAll(User.class);
+                daoSession.deleteAll(Detail.class);
+                //存入数据库
+                for (int i = 0; i < p.getUser().size(); i++) {
+                    daoSession.insert(p.getUser().get(i));
+                }
+                for (int i = 0; i < p.getDetail().size(); i++) {
+                    daoSession.insert(p.getDetail().get(i));
+                }
+                //查询数据
+                User user = daoSession.queryBuilder(User.class)
+                        .where(UserDao.Properties.LOGIN_NAME.eq(LOGINNAME))
+                        .unique();
+                //            qb.where(UserDao.Properties.LOGIN_NAME.eq(LOGINNAME)).unique();
+                try {
+                    if (user.getPASSWORD().equals(PASSWORD)) {
+                        msg = "登陆成功";
+                        Intent intent = new Intent();
+                        intent.setClass(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        msg = "用户名或密码不正确";
+                    }
+                } catch (Exception e) {
+                    msg = "用户名或密码不正确";
+                    e.printStackTrace();
+                }
+            }
+            return msg;
+        }
+
+        /**
+         * 后台任务完成后
+         *
+         * @param s
+         */
+        @Override
+        protected void onPostExecute(String s) {
+            materialDialog.dismiss();
+            showSnackbar(getWindow().getDecorView(), s);
+            super.onPostExecute(s);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        materialDialog.dismiss();
+        super.onDestroy();
+    }
 }
 

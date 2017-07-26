@@ -29,7 +29,7 @@ import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
-import com.hlct.framework.pda.common.entity.ResultInfo;
+import com.hlct.android.bean.ResultInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hlct.android.activity.StocktakingPlanActivity"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/stocktaking_appbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/stocktaking_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                >
+
+                <TextView
+                    android:id="@+id/stocktaking_toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="60dp"
+                    android:gravity="center"
+                    android:text="@string/stocktaking_running"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+            </android.support.v7.widget.Toolbar>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/stocktaking_data"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:id="@+id/stocktaking_tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_date"
+                    android:paddingStart="8dp"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/stockingtaking_count"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:id="@+id/stocktaking_tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_111"
+                    android:paddingStart="8dp"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="92dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/stocktaking_person"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:id="@+id/stocktaking_tv_person"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_person"
+                    android:paddingStart="8dp"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="92dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/stocktaking_counted"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:id="@+id/stocktaking_tv_counted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_111"
+                    android:paddingStart="8dp"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+            </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/stocktaking_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:background="@color/colorWhite"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:tabIndicatorColor="#f92e2e"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#f92e2e"
+            app:tabTextColor="@color/textSecondary"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stocktaking_appbar_layout"
+        app:layout_constraintVertical_bias="0.0">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/stocktaking_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

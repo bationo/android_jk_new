@@ -26,4 +26,25 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stocktaking_running">进行盘点</string>
+    <string name="stocktaking_person">盘点人：</string>
+    <string name="stocktaking_counted">已盘点：</string>
+    <string name="hint_person">测试用</string>
+    <string name="hint_111">111</string>
+    <string name="stocktaking_data">盘点日期：</string>
+    <string name="stockingtaking_count">盘点总数：</string>
+    <string name="hint_date">2017-7-25</string>
+    <string name="start_stocktaking">开始盘点</string>
+    <string name="commit_data">上传数据</string>
+    <string name="stocktaking_plan">盘点计划</string>
+    <string name="serial_number">编号：</string>
+    <string name="assert_name">资产名称：</string>
+    <string name="hint_assert_name">测试-笔记本</string>
+    <string name="rfid">RFID：</string>
+    <string name="hint_rfid">123456789012345678901234</string>
+    <string name="assert_type">资产类别：</string>
+    <string name="hint_assert_type">电子产品</string>
+    <string name="assert_user">使用人：</string>
+    <string name="assert_user_department">所属部门：</string>
+    <string name="assert_user_unit">所属单位：</string>
 </resources>

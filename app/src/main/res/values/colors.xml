@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorCardBlue">#1296db</color>
+    <!--一级字体颜色-->
+    <color name="textPrimary">#212121</color>
+    <!--二级字体颜色，大部分都用这个-->
+    <color name="textSecondary">#757575</color>
+    <!--分割线颜色-->
+    <color name="colorDivider">#DBDBDB</color>
 </resources>

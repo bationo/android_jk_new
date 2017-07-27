@@ -13,11 +13,15 @@ public class DatabaseConstant {
     }
 
     /**
-     * 文件存放地址
+     * 文件存放地址.
      */
     public static final String FILE_PATH = "/sdcard/Download/";
     /**
      * 数据库名称.
      */
     public static final String DATABASE_NAME = "hlct.db";
+    /**
+     * User对象的缓存名称.
+     */
+    public static final String DATACHCHE_USER = "LoginUser";
 }

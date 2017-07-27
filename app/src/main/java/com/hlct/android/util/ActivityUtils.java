@@ -8,13 +8,12 @@ import java.util.List;
 
 /**
  * @author ：     cmy
- * @version :     2017/3/16.
+ * @version :     2017/7/16.
  * @e-mil ：      mengyuan.cheng.mier@gmail.com
  * @Description : 将所有的activity添加到List中,方便退出时统一管理.
  *
  *                在Acitvity的onCreate方法中初始化。
  *                ActivityUtils.getInstance().addActivity(this);
- *
  *                在退出App的代码中调用destory()方法.
  */
 public class ActivityUtils extends Application {

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PropertyPlan;
@@ -32,8 +33,6 @@ import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +40,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_USER;
 import static com.hlct.android.constant.DatabaseConstant.FILE_PATH;
 import static com.hlct.android.constant.HttpConstant.BASE_SERVER_URL;
 import static com.hlct.android.constant.HttpConstant.flag;
@@ -66,11 +66,10 @@ public class LoginActivity extends AppCompatActivity {
     private static DaoSession daoSession;
 
     //等待的Dialog
-    private MaterialDialog materialDialog;
+    private MaterialDialog materialDialog = null;
 
     //时间戳
     private String date = FileUtils.getDate();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,19 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void test() {
-        List<String> l = new ArrayList<>();
-        l.add("123456");
-        l.add("123");
-        l.add("123");
-        l.add("123");
-        l.add("123");
-        for (int i = 0; i < l.size(); i++) {
-            String s = SecurityUtils.encryptAES(l.get(i));
-            l.add(s);
-        }
     }
 
     /**
@@ -203,29 +189,6 @@ public class LoginActivity extends AppCompatActivity {
         DaoMaster dm = new DaoMaster(db);
         //获取Dao对象的管理者
         daoSession = dm.newSession();
-
-        //        BankInfo bankInfo = new BankInfo();
-        //
-        //        bankInfo.setBankId(1L);
-        //        bankInfo.setBankName("招商银行华侨城支行");
-        //        bankInfo.setBankTaskStatus("未完成");
-        //        bankInfo.setLineId("A线路");
-        //        //存入数据库
-        //        daoSession.insert(bankInfo);
-        //        //查询数据
-        //                QueryBuilder qb = daoSession.queryBuilder(BankInfo.class);
-        //        qb.list();
-        //        Logger.d(qb.list());
-        //        for (int i = 0; i < qb.list().size(); i++) {
-        //            BankInfo bl = (BankInfo) qb.list().get(i);
-        //            Logger.d(bl.getBankName());
-        //        }
-        //        //修改数据
-        //        bankInfo.setBankName("华夏银行华侨城支行");
-        //        daoSession.update(bankInfo);
-        //
-        //        //删除数据
-        //        daoSession.delete(BankInfo.class);
     }
 
     private class mAsyncTask extends AsyncTask<String, Integer, String> {
@@ -259,11 +222,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             //解析数据,放入实体类中
-            PropertyPlan p = new PropertyPlan();
             String str;
             Gson gson = new Gson();
-
-            String msg = "test";
+            String msg = "提示";
+            PropertyPlan p = new PropertyPlan();
             try {
                 str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
                 p = gson.fromJson(str, PropertyPlan.class);
@@ -292,6 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     if (user.getPASSWORD().equals(PASSWORD)) {
                         msg = "登陆成功";
+                        DataCache.saveUser(getApplicationContext(), DATACHCHE_USER, user);
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -321,8 +284,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        materialDialog.dismiss();
+        if (materialDialog != null) {
+            materialDialog.dismiss();
+        }
         super.onDestroy();
     }
+
 }
 

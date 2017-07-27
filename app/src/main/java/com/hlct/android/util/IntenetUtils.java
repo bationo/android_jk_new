@@ -32,12 +32,14 @@ public class IntenetUtils {
 
     /**
      * 获取当前网络连接类型
+     *
      * @param context
      * @return
      */
     public static int getNetworkState(Context context) {
         //获取系统的网络服务
-        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connManager = (ConnectivityManager) context.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //如果当前没有网络
         if (null == connManager)
@@ -54,7 +56,8 @@ public class IntenetUtils {
         if (null != wifiInfo) {
             NetworkInfo.State state = wifiInfo.getState();
             if (null != state)
-                if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
+                if (state == NetworkInfo.State.CONNECTED ||
+                        state == NetworkInfo.State.CONNECTING) {
                     return NETWORN_WIFI;
                 }
         }
@@ -66,7 +69,8 @@ public class IntenetUtils {
             NetworkInfo.State state = networkInfo.getState();
             String strSubTypeName = networkInfo.getSubtypeName();
             if (null != state)
-                if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
+                if (state == NetworkInfo.State.CONNECTED ||
+                        state == NetworkInfo.State.CONNECTING) {
                     switch (activeNetInfo.getSubtype()) {
                         //如果是2g类型
                         case TelephonyManager.NETWORK_TYPE_GPRS: // 联通2g
@@ -91,7 +95,9 @@ public class IntenetUtils {
                             return NETWORN_4G;
                         default:
                             //中国移动 联通 电信 三种3G制式
-                            if (strSubTypeName.equalsIgnoreCase("TD-SCDMA") || strSubTypeName.equalsIgnoreCase("WCDMA") || strSubTypeName.equalsIgnoreCase("CDMA2000")) {
+                            if (strSubTypeName.equalsIgnoreCase("TD-SCDMA") ||
+                                    strSubTypeName.equalsIgnoreCase("WCDMA") ||
+                                    strSubTypeName.equalsIgnoreCase("CDMA2000")) {
                                 return NETWORN_3G;
                             } else {
                                 return NETWORN_MOBILE;

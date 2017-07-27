@@ -1,7 +1,6 @@
 package com.hlct.android.activity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,24 +14,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.gson.Gson;
 import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
-import com.hlct.android.bean.Detail;
-import com.hlct.android.bean.PropertyPlan;
 import com.hlct.android.bean.ResultInfo;
 import com.hlct.android.bean.User;
-import com.hlct.android.constant.DatabaseConstant;
-import com.hlct.android.greendao.DaoMaster;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.UserDao;
 import com.hlct.android.http.APIService;
 import com.hlct.android.util.ActivityUtils;
-import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
-
-import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,8 +31,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.hlct.android.DataCache.DataCache.getParseResult;
+import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_USER;
-import static com.hlct.android.constant.DatabaseConstant.FILE_PATH;
+import static com.hlct.android.constant.DatabaseConstant.setupDatabase;
 import static com.hlct.android.constant.HttpConstant.BASE_SERVER_URL;
 import static com.hlct.android.constant.HttpConstant.flag;
 import static com.hlct.android.util.IntenetUtils.NETWORN_2G;
@@ -68,16 +61,13 @@ public class LoginActivity extends AppCompatActivity {
     //等待的Dialog
     private MaterialDialog materialDialog = null;
 
-    //时间戳
-    private String date = FileUtils.getDate();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ActivityUtils.getInstance().addActivity(this);
-        setupDatabase();
-
+        //初始化数据库
+        daoSession = setupDatabase(this, daoSession);
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
         mPasswordView = (EditText) findViewById(R.id.password_et_login);
@@ -107,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * 通过文件解析文件进行登陆
+     * 通过查询数据库进行登陆
      */
     public void doFileLogin() {
         mAsyncTask mAsyncTask = new mAsyncTask();
@@ -176,20 +166,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 数据库相关
-     */
-    private void setupDatabase() {
-        //创建数据库
-        DaoMaster.DevOpenHelper helper =
-                new DaoMaster.DevOpenHelper(this, DatabaseConstant.DATABASE_NAME, null);
-        //获取可写数据库
-        SQLiteDatabase db = helper.getWritableDatabase();
-        //获取数据库对象
-        DaoMaster dm = new DaoMaster(db);
-        //获取Dao对象的管理者
-        daoSession = dm.newSession();
-    }
 
     private class mAsyncTask extends AsyncTask<String, Integer, String> {
 
@@ -201,11 +177,10 @@ public class LoginActivity extends AppCompatActivity {
             //获取输入的账号密码
             LOGINNAME = mLoginName.getText().toString();
             //加密
-            //            PASSWORD = SecurityUtils.encryptAES("123");
             PASSWORD = SecurityUtils.getMD5(mPasswordView.getText().toString());
             //弹出提示
             materialDialog = new MaterialDialog.Builder(LoginActivity.this)
-                    .title("正在解析当前文件")
+                    .title("正在登陆")
                     .content("请稍后")
                     .progress(true, 0)
                     .cancelable(false)
@@ -221,52 +196,31 @@ public class LoginActivity extends AppCompatActivity {
          */
         @Override
         protected String doInBackground(String... strings) {
-            //解析数据,放入实体类中
-            String str;
-            Gson gson = new Gson();
-            String msg = "提示";
-            PropertyPlan p = new PropertyPlan();
-            try {
-                str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
-                p = gson.fromJson(str, PropertyPlan.class);
-            } catch (IOException e) {
-                msg = "当前文件有误!";
-                e.printStackTrace();
-            }
-            if (msg.equals("当前文件有误!")) {
-
-            } else {
-                //清空当前数据库
-                daoSession.deleteAll(User.class);
-                daoSession.deleteAll(Detail.class);
-                //存入数据库
-                for (int i = 0; i < p.getUser().size(); i++) {
-                    daoSession.insert(p.getUser().get(i));
-                }
-                for (int i = 0; i < p.getDetail().size(); i++) {
-                    daoSession.insert(p.getDetail().get(i));
-                }
+            boolean flag = getParseResult(getApplicationContext(), DATACHCHE_FILE_RESULT);
+            String s = "";
+            if (flag == true) {//如果数据解析成功
                 //查询数据
                 User user = daoSession.queryBuilder(User.class)
                         .where(UserDao.Properties.LOGIN_NAME.eq(LOGINNAME))
                         .unique();
-                //            qb.where(UserDao.Properties.LOGIN_NAME.eq(LOGINNAME)).unique();
                 try {
                     if (user.getPASSWORD().equals(PASSWORD)) {
-                        msg = "登陆成功";
                         DataCache.saveUser(getApplicationContext(), DATACHCHE_USER, user);
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                     } else {
-                        msg = "用户名或密码不正确";
+                        s = "账号密码有误";
                     }
                 } catch (Exception e) {
-                    msg = "用户名或密码不正确";
-                    e.printStackTrace();
+                    s = "账号密码有误";
                 }
+
+            } else if (flag == false) {//如果失败
+                s = "文件解析失败";
             }
-            return msg;
+            return s;
         }
 
         /**
@@ -290,5 +244,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            ActivityUtils.getInstance().destory();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
 

@@ -34,20 +34,20 @@ greendao {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //Logger:   简单，漂亮，强大的Android日志工具。
-    compile 'com.orhanobut:logger:1.15'
     //指纹识别Jar依赖
     compile files('libs/serialport.jar')
     compile files('libs/usb06fp.jar')
     //DialogUtils
-    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     // Retrofit库
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
     //Gson数据解析器
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     // Okhttp库
-    compile 'com.squareup.okhttp3:okhttp:3.1.2'
     //Gson: 一个Java序列化/反序列化库，可以将JSON和java对象互相转换。
     //数据库
+    compile 'com.orhanobut:logger:1.15'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'

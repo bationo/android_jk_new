@@ -47,4 +47,5 @@
     <string name="assert_user">使用人：</string>
     <string name="assert_user_department">所属部门：</string>
     <string name="assert_user_unit">所属单位：</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
 </resources>

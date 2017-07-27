@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
@@ -27,6 +28,8 @@ import static com.hlct.android.constant.DatabaseConstant.setupDatabase;
 public class WelcomeActivity extends AppCompatActivity {
     //等待的Dialog
     private MaterialDialog materialDialog = null;
+    //等待的ProgressBar
+    private ProgressBar progressBar = null;
     //时间戳
     private String date = FileUtils.getDate();
     //Dao对象的管理者
@@ -42,6 +45,8 @@ public class WelcomeActivity extends AppCompatActivity {
         //设为全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //获取progressBar
+        progressBar = (ProgressBar) findViewById(R.id.pb_welcome);
         //初始化数据库
         daoSession = setupDatabase(this, daoSession);
         //解析文件并存入数据库
@@ -56,12 +61,7 @@ public class WelcomeActivity extends AppCompatActivity {
          */
         @Override
         protected void onPreExecute() {
-            materialDialog = new MaterialDialog.Builder(WelcomeActivity.this)
-                    .title("提示")
-                    .content("正在加载,请稍后")
-                    .progress(true, 0)
-                    .cancelable(false)
-                    .show();
+
         }
 
         /**

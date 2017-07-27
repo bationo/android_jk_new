@@ -10,12 +10,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/welcome_bg"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription=""
+            android:src="@drawable/welcome_bg"
+            tools:ignore="ContentDescription"/>
+
+        <ProgressBar
+            android:id="@+id/pb_welcome"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pb_welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:text="正在加载数据,请稍后！"/>
+
+        <TextView
+            android:id="@+id/tv_CpName_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="98dp"
+            android:text="华联创通"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="80dp"/>
+
     </RelativeLayout>
 
 

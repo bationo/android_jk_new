@@ -62,6 +62,10 @@ public class DataCache {
         }
     }
 
+    /**
+     * 清空所有的aCache缓存
+     * @param context
+     */
     public static void cleanAll(Context context) {
         aCache = ACache.get(context);
         aCache.clear();

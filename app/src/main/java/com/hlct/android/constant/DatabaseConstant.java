@@ -35,6 +35,12 @@ public class DatabaseConstant {
      */
     public static final String DATACHCHE_FILE_RESULT = "FileResult";
 
+    /**
+     * greendao初始化
+     * @param context
+     * @param daoSession
+     * @return
+     */
     public static DaoSession setupDatabase(Context context, DaoSession daoSession) {
         //创建数据库
         DaoMaster.DevOpenHelper helper =

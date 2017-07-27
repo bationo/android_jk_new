@@ -3,9 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="资产盘点"/>
+            android:id="@+id/nav_stocktaking"
+            android:icon="@mipmap/stocktaking_grey_64"
+            android:title="@string/assert_stocktaking"
+            />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"

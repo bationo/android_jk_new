@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
                     android:paddingStart="8dp"
-                    android:text="@string/stockingtaking_count"
+                    android:text="@string/stocktaking_count"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
 

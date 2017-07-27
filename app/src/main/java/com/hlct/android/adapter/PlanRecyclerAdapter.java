@@ -1,6 +1,7 @@
 package com.hlct.android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hlct.android.R;
+import com.hlct.android.activity.StocktakingPlanActivity;
+import com.hlct.android.bean.PlanBean;
 
 import java.util.ArrayList;
 
@@ -17,16 +20,16 @@ import java.util.ArrayList;
 
 public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private Context mContext;
-    private ArrayList<String> mList;
+    private ArrayList<PlanBean> mList;
 
-    public PlanRecyclerAdapter(Context mContext, ArrayList<String> mList) {
+    public PlanRecyclerAdapter(Context mContext, ArrayList<PlanBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.stocktaking_plan_view,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.stocktaking_plan_view, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -36,23 +39,24 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
-        holder.mTVTime.setText(mList.get(position));
-        holder.mTVPerson.setText(mList.get(position));
-        holder.mTVCount.setText(mList.get(position));
-        holder.mTVCounted.setText(mList.get(position));
+        holder.mTVTime.setText(mList.get(position).getPlanTime());
+        holder.mTVPerson.setText(mList.get(position).getConfirmPerson());
+        holder.mTVCount.setText("20");
+        holder.mTVCounted.setText("0");
         holder.mTVStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //TODO 点击事件：开始盘点
+                //TODO 点击事件：开始盘点
+                mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
         holder.mTVCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //TODO 点击事件：上传数据
+                //TODO 点击事件：上传数据
             }
         });
     }
@@ -63,8 +67,8 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
 
-
 }
+
 class MyViewHolder extends RecyclerView.ViewHolder {
     TextView mTVTime;
     TextView mTVPerson;

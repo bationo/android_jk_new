@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">android_jk_new</string>
+    <string name="app_name">HLCT资产管理</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -32,7 +32,7 @@
     <string name="hint_person">测试用</string>
     <string name="hint_111">111</string>
     <string name="stocktaking_data">盘点日期：</string>
-    <string name="stockingtaking_count">盘点总数：</string>
+    <string name="stocktaking_count">盘点总数：</string>
     <string name="hint_date">2017-7-25</string>
     <string name="start_stocktaking">开始盘点</string>
     <string name="commit_data">上传数据</string>
@@ -47,5 +47,6 @@
     <string name="assert_user">使用人：</string>
     <string name="assert_user_department">所属部门：</string>
     <string name="assert_user_unit">所属单位：</string>
+    <string name="assert_stocktaking">资产盘点</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
 </resources>

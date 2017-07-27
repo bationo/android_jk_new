@@ -1,9 +1,12 @@
 package com.hlct.android.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,44 +16,83 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.hlct.android.R;
+import com.hlct.android.fragment.StocktakingDetailFragment;
+import com.hlct.android.fragment.StocktakingFragment;
 import com.hlct.android.util.ActivityUtils;
 
+import static com.hlct.android.R.id.toolbar;
 import static com.hlct.android.util.SnackbarUtil.showSnackbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static String TAG = "MainActivity";
+    private static String STOCKTAKING_FRAGMENT_TAG = "stocktakingFragment";
+    private Context mContext;
+
     //退出时间标志.
     private long mExitTime;
 
+    /***************view*********************/
+    private FrameLayout mFrameLayout;
+    private DrawerLayout mDrawerLayout;
+    private Toolbar mToolBar;
+    FloatingActionButton fab;
+    NavigationView navigationView;
+
+    /****************misc********************/
+    FragmentManager mManager;
+    StocktakingFragment stocktakingFragment;
+    StocktakingDetailFragment zFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActivityUtils.getInstance().addActivity(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolBar = (Toolbar) findViewById(toolbar);
+        setSupportActionBar(mToolBar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        initView();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO 悬浮按钮点击事件
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //        drawer.setDrawerListener(toggle);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //侧滑导航栏 item的点击事件
         navigationView.setNavigationItemSelectedListener(this);
+        //fragment 管理
+        addFragment();
+
+    }
+
+    /**
+     * 将要展示的fragment放在transaction中，以备调用。
+     */
+    private void addFragment() {
+        mManager = getSupportFragmentManager();
+        FragmentTransaction mTransaction = mManager.beginTransaction();
+        stocktakingFragment = new StocktakingFragment();
+        mTransaction.add(R.id.activity_main_linear_container,stocktakingFragment,STOCKTAKING_FRAGMENT_TAG);
+        zFragment = new StocktakingDetailFragment();
+        mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");
+        mTransaction.commit();
+    }
+
+    private void initView() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //        drawer.setDrawerListener(toggle);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     @Override
@@ -69,17 +111,41 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_stocktaking) {
+            FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(stocktakingFragment);
+            mTransaction.hide(zFragment);
+            mTransaction.commit();
 
         } else if (id == R.id.nav_gallery) {
+            FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(zFragment);
+            mTransaction.hide(stocktakingFragment);
+            mTransaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
+            /*FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(stocktakingFragment);
+            mTransaction.hide(zFragment);
+            mTransaction.commit();*/
 
         } else if (id == R.id.nav_manage) {
+            /*FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(zFragment);
+            mTransaction.hide(stocktakingFragment);
+            mTransaction.commit();*/
 
         } else if (id == R.id.nav_share) {
+            /*FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(stocktakingFragment);
+            mTransaction.hide(zFragment);
+            mTransaction.commit();*/
 
         } else if (id == R.id.nav_send) {
+            /*FragmentTransaction mTransaction = mManager.beginTransaction();
+            mTransaction.show(zFragment);
+            mTransaction.hide(stocktakingFragment);
+            mTransaction.commit();*/
 
         }
 

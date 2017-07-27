@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!-- 获取网络连接 -->
+    <!--获取网络连接-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 获取网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -23,11 +23,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.hlct.android.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name="com.hlct.android.activity.LoginActivity"
+            android:label="@string/app_name">
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
@@ -40,6 +42,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.StocktakingPlanActivity">
+
+        </activity>
+        <activity android:name=".activity.StocktakingDetailActivity">
+
         </activity>
     </application>
 

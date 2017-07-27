@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.hlct.android.R;
 import com.hlct.android.adapter.FragmentPagerAdapterWithTab;
 import com.hlct.android.fragment.StocktakingDetailFragment;
-import com.hlct.android.fragment.StocktakingFragment;
 
 import java.util.ArrayList;
 
@@ -84,7 +83,7 @@ public class StocktakingPlanActivity extends AppCompatActivity {
         }
         mFragments = new ArrayList<>();
         StocktakingDetailFragment fragment = new StocktakingDetailFragment();
-        StocktakingFragment fragment1 = new StocktakingFragment();
+        StocktakingDetailFragment fragment1 = new StocktakingDetailFragment();
         mFragments.add(fragment);
         mFragments.add(fragment1);
     }

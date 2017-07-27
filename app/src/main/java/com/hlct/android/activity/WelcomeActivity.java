@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
 import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.PlanBean;
 import com.hlct.android.bean.PropertyPlan;
 import com.hlct.android.bean.User;
 import com.hlct.android.greendao.DaoSession;
@@ -20,6 +23,8 @@ import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.FileUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
 import static com.hlct.android.constant.DatabaseConstant.FILE_PATH;
@@ -73,6 +78,8 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             String str;
+            String details;
+            String plans;
             Gson gson = new Gson();
             PropertyPlan p = new PropertyPlan();
             boolean flag = false;
@@ -80,17 +87,27 @@ public class WelcomeActivity extends AppCompatActivity {
                 //解析文件
                 str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
                 p = gson.fromJson(str, PropertyPlan.class);
-
+                details = FileUtils.readFile(FILE_PATH+"detail.txt");
+                plans = FileUtils.readFile(FILE_PATH + "plan.txt");
+                ArrayList<Detail> detailArrayList = gson.fromJson(details, new TypeToken<ArrayList<Detail>>() {}.getType());
+                ArrayList<PlanBean> planBeanArrayList =
+                        gson.fromJson(plans,new TypeToken<ArrayList<PlanBean>>(){}.getType());
                 //清空当前数据库
                 daoSession.deleteAll(User.class);
                 daoSession.deleteAll(Detail.class);
+
                 //存入数据库
-                for (int i = 0; i < p.getUser().size(); i++) {
+                Log.e("开始时间---->", new Date().toString());
+                daoSession.getPlanBeanDao().insertOrReplaceInTx(planBeanArrayList);
+                daoSession.getUserDao().insertOrReplaceInTx(p.getUser());
+                daoSession.getDetailDao().insertOrReplaceInTx(detailArrayList);
+                /*for (int i = 0; i < p.getUser().size(); i++) {
                     daoSession.insert(p.getUser().get(i));
                 }
-                for (int i = 0; i < p.getDetail().size(); i++) {
-                    daoSession.insert(p.getDetail().get(i));
-                }
+                for (int i = 0; i < detailArrayList.size(); i++) {
+                    daoSession.insert(detailArrayList.get(i));
+                }*/
+                Log.e("结束时间---->", new Date().toString());
                 flag = true;
             } catch (IOException e) {
                 flag = false;

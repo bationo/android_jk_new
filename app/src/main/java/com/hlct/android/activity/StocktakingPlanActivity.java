@@ -10,20 +10,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hlct.android.R;
 import com.hlct.android.adapter.FragmentPagerAdapterWithTab;
+import com.hlct.android.bean.PlanBean;
 import com.hlct.android.fragment.StocktakingDetailFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 public class StocktakingPlanActivity extends AppCompatActivity {
 
-    private String TAG = "StocktakingPlanActivity";
+    public static String STOCKTAKING_PLAN_ACTIVITY_TAG = "StocktakingPlanActivity";
     private Context mContext;
-/*****************view********************/
+    /*****************view********************/
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolBar;
     private ViewPager mViewPager;
@@ -33,18 +39,21 @@ public class StocktakingPlanActivity extends AppCompatActivity {
     private TextView mTVCount;
     private TextView mTVCounted;
     private ArrayList<Fragment> mFragments;
-/*****************data*********************/
+    /*****************data*********************/
+    private long id;   //计划id号
     private ArrayList<String> mTabs = new ArrayList<>();
-    private String[] tabs = new String[]{"未盘点","已盘点"};
-
-/*****************misc*********************/
+    private String[] tabs = new String[]{"未盘点", "已盘点"};
+    private ArrayList<PlanBean> mList = new ArrayList<PlanBean>();
+    /*****************misc*********************/
     private FragmentPagerAdapterWithTab mFragmentPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stocktaking_plan);
         initView();
         initDate();
+
         mToolBar.setNavigationIcon(R.mipmap.back_white_64);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,9 +63,31 @@ public class StocktakingPlanActivity extends AppCompatActivity {
         });
         /***********fragment view pager***************/
         FragmentManager manager = getSupportFragmentManager();
-        mFragmentPagerAdapter = new FragmentPagerAdapterWithTab(manager,mFragments,mTabs);
+        mFragmentPagerAdapter = new FragmentPagerAdapterWithTab(manager, mFragments, mTabs);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     *
+     * @param id 消息事件
+     */
+    @Subscribe(threadMode = ThreadMode.POSTING,sticky = true)
+    public void onHandleId(Long id){
+        this.id = id;
+        Log.e("收到的id号是----->", id+"");
     }
 
     /**
@@ -78,7 +109,7 @@ public class StocktakingPlanActivity extends AppCompatActivity {
      */
 
     public void initDate() {
-        for (String tab:tabs) {
+        for (String tab : tabs) {
             mTabs.add(tab);
         }
         mFragments = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.hlct.android.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ public class Detail implements Serializable {
     /**
      * 详情id
      */
+    @Id
     private Long detailId;
 
     /**

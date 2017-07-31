@@ -24,10 +24,25 @@ public class UserDao extends AbstractDao<User, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property LOGIN_NAME = new Property(0, String.class, "LOGIN_NAME", false, "LOGIN__NAME");
-        public final static Property PASSWORD = new Property(1, String.class, "PASSWORD", false, "PASSWORD");
-        public final static Property NAME = new Property(2, String.class, "NAME", false, "NAME");
-        public final static Property DEPARTMENT_NAME = new Property(3, String.class, "DEPARTMENT_NAME", false, "DEPARTMENT__NAME");
+        public final static Property Id = new Property(0, Long.class, "id", false, "ID");
+        public final static Property UserCode = new Property(1, String.class, "userCode", false, "USER_CODE");
+        public final static Property LoginName = new Property(2, String.class, "loginName", false, "LOGIN_NAME");
+        public final static Property Password = new Property(3, String.class, "password", false, "PASSWORD");
+        public final static Property Email = new Property(4, String.class, "email", false, "EMAIL");
+        public final static Property Sex = new Property(5, String.class, "sex", false, "SEX");
+        public final static Property Telephone = new Property(6, String.class, "telephone", false, "TELEPHONE");
+        public final static Property Name = new Property(7, String.class, "name", false, "NAME");
+        public final static Property CreateUserId = new Property(8, Long.class, "createUserId", false, "CREATE_USER_ID");
+        public final static Property DepartmentId = new Property(9, Long.class, "departmentId", false, "DEPARTMENT_ID");
+        public final static Property DepartmentName = new Property(10, String.class, "departmentName", false, "DEPARTMENT_NAME");
+        public final static Property BankName = new Property(11, String.class, "bankName", false, "BANK_NAME");
+        public final static Property UpdateUserId = new Property(12, Long.class, "updateUserId", false, "UPDATE_USER_ID");
+        public final static Property CreateUserName = new Property(13, String.class, "createUserName", false, "CREATE_USER_NAME");
+        public final static Property UpdateUserName = new Property(14, String.class, "updateUserName", false, "UPDATE_USER_NAME");
+        public final static Property RoleNames = new Property(15, String.class, "roleNames", false, "ROLE_NAMES");
+        public final static Property NewPassword = new Property(16, String.class, "newPassword", false, "NEW_PASSWORD");
+        public final static Property Version = new Property(17, Long.class, "version", false, "VERSION");
+        public final static Property BankId = new Property(18, Long.class, "bankId", false, "BANK_ID");
     }
 
 
@@ -43,10 +58,25 @@ public class UserDao extends AbstractDao<User, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
-                "\"LOGIN__NAME\" TEXT," + // 0: LOGIN_NAME
-                "\"PASSWORD\" TEXT," + // 1: PASSWORD
-                "\"NAME\" TEXT," + // 2: NAME
-                "\"DEPARTMENT__NAME\" TEXT);"); // 3: DEPARTMENT_NAME
+                "\"ID\" INTEGER," + // 0: id
+                "\"USER_CODE\" TEXT," + // 1: userCode
+                "\"LOGIN_NAME\" TEXT," + // 2: loginName
+                "\"PASSWORD\" TEXT," + // 3: password
+                "\"EMAIL\" TEXT," + // 4: email
+                "\"SEX\" TEXT," + // 5: sex
+                "\"TELEPHONE\" TEXT," + // 6: telephone
+                "\"NAME\" TEXT," + // 7: name
+                "\"CREATE_USER_ID\" INTEGER," + // 8: createUserId
+                "\"DEPARTMENT_ID\" INTEGER," + // 9: departmentId
+                "\"DEPARTMENT_NAME\" TEXT," + // 10: departmentName
+                "\"BANK_NAME\" TEXT," + // 11: bankName
+                "\"UPDATE_USER_ID\" INTEGER," + // 12: updateUserId
+                "\"CREATE_USER_NAME\" TEXT," + // 13: createUserName
+                "\"UPDATE_USER_NAME\" TEXT," + // 14: updateUserName
+                "\"ROLE_NAMES\" TEXT," + // 15: roleNames
+                "\"NEW_PASSWORD\" TEXT," + // 16: newPassword
+                "\"VERSION\" INTEGER," + // 17: version
+                "\"BANK_ID\" INTEGER);"); // 18: bankId
     }
 
     /** Drops the underlying database table. */
@@ -59,24 +89,99 @@ public class UserDao extends AbstractDao<User, Void> {
     protected final void bindValues(DatabaseStatement stmt, User entity) {
         stmt.clearBindings();
  
-        String LOGIN_NAME = entity.getLOGIN_NAME();
-        if (LOGIN_NAME != null) {
-            stmt.bindString(1, LOGIN_NAME);
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
         }
  
-        String PASSWORD = entity.getPASSWORD();
-        if (PASSWORD != null) {
-            stmt.bindString(2, PASSWORD);
+        String userCode = entity.getUserCode();
+        if (userCode != null) {
+            stmt.bindString(2, userCode);
         }
  
-        String NAME = entity.getNAME();
-        if (NAME != null) {
-            stmt.bindString(3, NAME);
+        String loginName = entity.getLoginName();
+        if (loginName != null) {
+            stmt.bindString(3, loginName);
         }
  
-        String DEPARTMENT_NAME = entity.getDEPARTMENT_NAME();
-        if (DEPARTMENT_NAME != null) {
-            stmt.bindString(4, DEPARTMENT_NAME);
+        String password = entity.getPassword();
+        if (password != null) {
+            stmt.bindString(4, password);
+        }
+ 
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(5, email);
+        }
+ 
+        String sex = entity.getSex();
+        if (sex != null) {
+            stmt.bindString(6, sex);
+        }
+ 
+        String telephone = entity.getTelephone();
+        if (telephone != null) {
+            stmt.bindString(7, telephone);
+        }
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(8, name);
+        }
+ 
+        Long createUserId = entity.getCreateUserId();
+        if (createUserId != null) {
+            stmt.bindLong(9, createUserId);
+        }
+ 
+        Long departmentId = entity.getDepartmentId();
+        if (departmentId != null) {
+            stmt.bindLong(10, departmentId);
+        }
+ 
+        String departmentName = entity.getDepartmentName();
+        if (departmentName != null) {
+            stmt.bindString(11, departmentName);
+        }
+ 
+        String bankName = entity.getBankName();
+        if (bankName != null) {
+            stmt.bindString(12, bankName);
+        }
+ 
+        Long updateUserId = entity.getUpdateUserId();
+        if (updateUserId != null) {
+            stmt.bindLong(13, updateUserId);
+        }
+ 
+        String createUserName = entity.getCreateUserName();
+        if (createUserName != null) {
+            stmt.bindString(14, createUserName);
+        }
+ 
+        String updateUserName = entity.getUpdateUserName();
+        if (updateUserName != null) {
+            stmt.bindString(15, updateUserName);
+        }
+ 
+        String roleNames = entity.getRoleNames();
+        if (roleNames != null) {
+            stmt.bindString(16, roleNames);
+        }
+ 
+        String newPassword = entity.getNewPassword();
+        if (newPassword != null) {
+            stmt.bindString(17, newPassword);
+        }
+ 
+        Long version = entity.getVersion();
+        if (version != null) {
+            stmt.bindLong(18, version);
+        }
+ 
+        Long bankId = entity.getBankId();
+        if (bankId != null) {
+            stmt.bindLong(19, bankId);
         }
     }
 
@@ -84,24 +189,99 @@ public class UserDao extends AbstractDao<User, Void> {
     protected final void bindValues(SQLiteStatement stmt, User entity) {
         stmt.clearBindings();
  
-        String LOGIN_NAME = entity.getLOGIN_NAME();
-        if (LOGIN_NAME != null) {
-            stmt.bindString(1, LOGIN_NAME);
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
         }
  
-        String PASSWORD = entity.getPASSWORD();
-        if (PASSWORD != null) {
-            stmt.bindString(2, PASSWORD);
+        String userCode = entity.getUserCode();
+        if (userCode != null) {
+            stmt.bindString(2, userCode);
         }
  
-        String NAME = entity.getNAME();
-        if (NAME != null) {
-            stmt.bindString(3, NAME);
+        String loginName = entity.getLoginName();
+        if (loginName != null) {
+            stmt.bindString(3, loginName);
         }
  
-        String DEPARTMENT_NAME = entity.getDEPARTMENT_NAME();
-        if (DEPARTMENT_NAME != null) {
-            stmt.bindString(4, DEPARTMENT_NAME);
+        String password = entity.getPassword();
+        if (password != null) {
+            stmt.bindString(4, password);
+        }
+ 
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(5, email);
+        }
+ 
+        String sex = entity.getSex();
+        if (sex != null) {
+            stmt.bindString(6, sex);
+        }
+ 
+        String telephone = entity.getTelephone();
+        if (telephone != null) {
+            stmt.bindString(7, telephone);
+        }
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(8, name);
+        }
+ 
+        Long createUserId = entity.getCreateUserId();
+        if (createUserId != null) {
+            stmt.bindLong(9, createUserId);
+        }
+ 
+        Long departmentId = entity.getDepartmentId();
+        if (departmentId != null) {
+            stmt.bindLong(10, departmentId);
+        }
+ 
+        String departmentName = entity.getDepartmentName();
+        if (departmentName != null) {
+            stmt.bindString(11, departmentName);
+        }
+ 
+        String bankName = entity.getBankName();
+        if (bankName != null) {
+            stmt.bindString(12, bankName);
+        }
+ 
+        Long updateUserId = entity.getUpdateUserId();
+        if (updateUserId != null) {
+            stmt.bindLong(13, updateUserId);
+        }
+ 
+        String createUserName = entity.getCreateUserName();
+        if (createUserName != null) {
+            stmt.bindString(14, createUserName);
+        }
+ 
+        String updateUserName = entity.getUpdateUserName();
+        if (updateUserName != null) {
+            stmt.bindString(15, updateUserName);
+        }
+ 
+        String roleNames = entity.getRoleNames();
+        if (roleNames != null) {
+            stmt.bindString(16, roleNames);
+        }
+ 
+        String newPassword = entity.getNewPassword();
+        if (newPassword != null) {
+            stmt.bindString(17, newPassword);
+        }
+ 
+        Long version = entity.getVersion();
+        if (version != null) {
+            stmt.bindLong(18, version);
+        }
+ 
+        Long bankId = entity.getBankId();
+        if (bankId != null) {
+            stmt.bindLong(19, bankId);
         }
     }
 
@@ -113,20 +293,50 @@ public class UserDao extends AbstractDao<User, Void> {
     @Override
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // LOGIN_NAME
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // PASSWORD
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // NAME
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // DEPARTMENT_NAME
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // userCode
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // loginName
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // password
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // email
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // sex
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // telephone
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // name
+            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // createUserId
+            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // departmentId
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // departmentName
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // bankName
+            cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12), // updateUserId
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // createUserName
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // updateUserName
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // roleNames
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // newPassword
+            cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17), // version
+            cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18) // bankId
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
-        entity.setLOGIN_NAME(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setPASSWORD(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setNAME(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setDEPARTMENT_NAME(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setUserCode(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setLoginName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setPassword(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setEmail(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setSex(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setTelephone(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setCreateUserId(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
+        entity.setDepartmentId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
+        entity.setDepartmentName(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setBankName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setUpdateUserId(cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12));
+        entity.setCreateUserName(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setUpdateUserName(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setRoleNames(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setNewPassword(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
+        entity.setVersion(cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17));
+        entity.setBankId(cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18));
      }
     
     @Override

@@ -22,6 +22,7 @@ public class DatabaseConstant {
      * 文件存放地址.
      */
     public static final String FILE_PATH = "/sdcard/Download/";
+    //public static final String FILE_PATH = "/storage/emulate/0/Download/";
     /**
      * 数据库名称.
      */
@@ -41,8 +42,9 @@ public class DatabaseConstant {
      * @param daoSession
      * @return
      */
-    public static DaoSession setupDatabase(Context context, DaoSession daoSession) {
+    public static DaoSession setupDatabase(Context context) {
         //创建数据库
+        DaoSession daoSession;
         DaoMaster.DevOpenHelper helper =
                 new DaoMaster.DevOpenHelper(context, DatabaseConstant.DATABASE_NAME, null);
         //获取可写数据库

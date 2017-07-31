@@ -16,7 +16,6 @@ import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PlanBean;
-import com.hlct.android.bean.PropertyPlan;
 import com.hlct.android.bean.User;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.util.ActivityUtils;
@@ -53,7 +52,7 @@ public class WelcomeActivity extends AppCompatActivity {
         //获取progressBar
         progressBar = (ProgressBar) findViewById(R.id.pb_welcome);
         //初始化数据库
-        daoSession = setupDatabase(this, daoSession);
+        daoSession = setupDatabase(this);
         //解析文件并存入数据库
         mAsyncTask mAsyncTask = new mAsyncTask();
         mAsyncTask.execute();
@@ -81,33 +80,36 @@ public class WelcomeActivity extends AppCompatActivity {
             String details;
             String plans;
             Gson gson = new Gson();
-            PropertyPlan p = new PropertyPlan();
+            User user = new User();
             boolean flag = false;
             try {
                 //解析文件
                 str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
-                p = gson.fromJson(str, PropertyPlan.class);
-                details = FileUtils.readFile(FILE_PATH+"detail.txt");
+                ArrayList<User> users = gson.fromJson(str, new TypeToken<ArrayList<User>>() {
+                }.getType());
+                details = FileUtils.readFile(FILE_PATH + "detail.txt");
                 plans = FileUtils.readFile(FILE_PATH + "plan.txt");
-                ArrayList<Detail> detailArrayList = gson.fromJson(details, new TypeToken<ArrayList<Detail>>() {}.getType());
-                ArrayList<PlanBean> planBeanArrayList =
-                        gson.fromJson(plans,new TypeToken<ArrayList<PlanBean>>(){}.getType());
+                ArrayList<Detail> detailArrayList = gson.fromJson(details, new TypeToken<ArrayList<Detail>>() {
+                }.getType());
+                ArrayList<PlanBean> planBeanArrayList = gson.fromJson(plans, new TypeToken<ArrayList<PlanBean>>() {
+                }.getType());
+
+                Log.e("开始时间---->", new Date().toString());
                 //清空当前数据库
+                //daoSession.getPlanBeanDao().deleteAll();
+                //daoSession.getDetailDao().deleteAll();
                 daoSession.deleteAll(User.class);
-                daoSession.deleteAll(Detail.class);
 
                 //存入数据库
-                Log.e("开始时间---->", new Date().toString());
+
+                //daoSession.getPlanBeanDao().insertOrReplaceInTx(planBeanArrayList);
                 daoSession.getPlanBeanDao().insertOrReplaceInTx(planBeanArrayList);
-                daoSession.getUserDao().insertOrReplaceInTx(p.getUser());
+                daoSession.getUserDao().insertOrReplaceInTx(users);
                 daoSession.getDetailDao().insertOrReplaceInTx(detailArrayList);
-                /*for (int i = 0; i < p.getUser().size(); i++) {
-                    daoSession.insert(p.getUser().get(i));
-                }
-                for (int i = 0; i < detailArrayList.size(); i++) {
-                    daoSession.insert(detailArrayList.get(i));
-                }*/
+
                 Log.e("结束时间---->", new Date().toString());
+                Log.e("插入数据的条数", daoSession.getDetailDao().loadAll().size() + "");
+                Log.e("插入数据的条数", daoSession.getPlanBeanDao().loadAll().size() + "");
                 flag = true;
             } catch (IOException e) {
                 flag = false;

@@ -45,6 +45,7 @@ public class StocktakingDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mContext = getActivity();
+        initData();
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_detail_recycler);
         mRecyclerAdapter = new DetailRecyclerAdapter(mContext, mList);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
@@ -52,7 +53,7 @@ public class StocktakingDetailFragment extends Fragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mRecyclerAdapter);
-        initData();
+
         //TODO 设置下来加载更多
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.fragment_stocktaking_detail_SR);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
@@ -78,9 +79,7 @@ public class StocktakingDetailFragment extends Fragment {
      */
     private void initData() {
         //TODO 加载数据
-        for (int i = 0; i < 10; i++) {
-            mList.add("item" + i);
-        }
+
     }
 
     @Nullable

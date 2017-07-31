@@ -67,11 +67,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ActivityUtils.getInstance().addActivity(this);
         //初始化数据库
-        daoSession = setupDatabase(this, daoSession);
+        daoSession = setupDatabase(this);
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
         mPasswordView = (EditText) findViewById(R.id.password_et_login);
-
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -201,10 +200,10 @@ public class LoginActivity extends AppCompatActivity {
             if (flag == true) {//如果数据解析成功
                 //查询数据
                 User user = daoSession.queryBuilder(User.class)
-                        .where(UserDao.Properties.LOGIN_NAME.eq(LOGINNAME))
+                        .where(UserDao.Properties.LoginName.eq(LOGINNAME))
                         .unique();
                 try {
-                    if (user.getPASSWORD().equals(PASSWORD)) {
+                    if (user.getPassword().equals(PASSWORD)) {
                         DataCache.saveUser(getApplicationContext(), DATACHCHE_USER, user);
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, MainActivity.class);

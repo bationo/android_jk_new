@@ -3,6 +3,7 @@ package com.hlct.android.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 ;
 
@@ -12,6 +13,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class PlanBean{
 
+	@Id
     private Long planId;
     private String planNumber;
     private String inventoryPerson;

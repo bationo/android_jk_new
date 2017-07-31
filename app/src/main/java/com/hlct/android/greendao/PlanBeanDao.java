@@ -15,7 +15,7 @@ import com.hlct.android.bean.PlanBean;
 /** 
  * DAO for table "PLAN_BEAN".
 */
-public class PlanBeanDao extends AbstractDao<PlanBean, Void> {
+public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
 
     public static final String TABLENAME = "PLAN_BEAN";
 
@@ -24,7 +24,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property PlanId = new Property(0, Long.class, "planId", false, "PLAN_ID");
+        public final static Property PlanId = new Property(0, Long.class, "planId", true, "_id");
         public final static Property PlanNumber = new Property(1, String.class, "planNumber", false, "PLAN_NUMBER");
         public final static Property InventoryPerson = new Property(2, String.class, "inventoryPerson", false, "INVENTORY_PERSON");
         public final static Property PlanTime = new Property(3, String.class, "planTime", false, "PLAN_TIME");
@@ -47,7 +47,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLAN_BEAN\" (" + //
-                "\"PLAN_ID\" INTEGER," + // 0: planId
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: planId
                 "\"PLAN_NUMBER\" TEXT," + // 1: planNumber
                 "\"INVENTORY_PERSON\" TEXT," + // 2: inventoryPerson
                 "\"PLAN_TIME\" TEXT," + // 3: planTime
@@ -154,8 +154,8 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
@@ -186,20 +186,23 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(PlanBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(PlanBean entity, long rowId) {
+        entity.setPlanId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(PlanBean entity) {
-        return null;
+    public Long getKey(PlanBean entity) {
+        if(entity != null) {
+            return entity.getPlanId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(PlanBean entity) {
-        // TODO
-        return false;
+        return entity.getPlanId() != null;
     }
 
     @Override

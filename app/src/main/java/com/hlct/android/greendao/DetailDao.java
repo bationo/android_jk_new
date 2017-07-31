@@ -15,7 +15,7 @@ import com.hlct.android.bean.Detail;
 /** 
  * DAO for table "DETAIL".
 */
-public class DetailDao extends AbstractDao<Detail, Void> {
+public class DetailDao extends AbstractDao<Detail, Long> {
 
     public static final String TABLENAME = "DETAIL";
 
@@ -24,7 +24,7 @@ public class DetailDao extends AbstractDao<Detail, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property DetailId = new Property(0, Long.class, "detailId", false, "DETAIL_ID");
+        public final static Property DetailId = new Property(0, Long.class, "detailId", true, "_id");
         public final static Property PlanId = new Property(1, Long.class, "planId", false, "PLAN_ID");
         public final static Property InventroryName = new Property(2, String.class, "inventroryName", false, "INVENTRORY_NAME");
         public final static Property InventoryState = new Property(3, String.class, "inventoryState", false, "INVENTORY_STATE");
@@ -49,7 +49,7 @@ public class DetailDao extends AbstractDao<Detail, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DETAIL\" (" + //
-                "\"DETAIL_ID\" INTEGER," + // 0: detailId
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: detailId
                 "\"PLAN_ID\" INTEGER," + // 1: planId
                 "\"INVENTRORY_NAME\" TEXT," + // 2: inventroryName
                 "\"INVENTORY_STATE\" TEXT," + // 3: inventoryState
@@ -178,8 +178,8 @@ public class DetailDao extends AbstractDao<Detail, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
@@ -214,20 +214,23 @@ public class DetailDao extends AbstractDao<Detail, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(Detail entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(Detail entity, long rowId) {
+        entity.setDetailId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(Detail entity) {
-        return null;
+    public Long getKey(Detail entity) {
+        if(entity != null) {
+            return entity.getDetailId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(Detail entity) {
-        // TODO
-        return false;
+        return entity.getDetailId() != null;
     }
 
     @Override

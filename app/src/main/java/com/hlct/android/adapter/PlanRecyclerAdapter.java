@@ -3,6 +3,7 @@ package com.hlct.android.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import com.hlct.android.R;
 import com.hlct.android.activity.StocktakingPlanActivity;
 import com.hlct.android.bean.PlanBean;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by lazylee on 2017/7/25.
@@ -20,9 +23,9 @@ import java.util.ArrayList;
 
 public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private Context mContext;
-    private ArrayList<PlanBean> mList;
+    private List<PlanBean> mList;
 
-    public PlanRecyclerAdapter(Context mContext, ArrayList<PlanBean> mList) {
+    public PlanRecyclerAdapter(Context mContext, List<PlanBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -34,11 +37,14 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         //TODO item的点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                EventBus.getDefault().postSticky(mList.get(position).getPlanId());
+                Log.e("plan id ------------->",mList.get(position).getPlanId()+"");
                 mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
@@ -50,6 +56,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View v) {
                 //TODO 点击事件：开始盘点
+                EventBus.getDefault().post(mList.get(position).getPlanId());
                 mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });

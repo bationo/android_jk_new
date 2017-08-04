@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#455bd4"
+    >
+    <!-- Toolbar 上的textview  无边界波纹背景-->
+</ripple>

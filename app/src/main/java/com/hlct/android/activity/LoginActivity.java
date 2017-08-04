@@ -230,7 +230,18 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             materialDialog.dismiss();
-            showSnackbar(getWindow().getDecorView(), s);
+            switch (s){
+                case "账号密码有误":
+
+                    mPasswordView.setError(s,null);
+                    break;
+                case "文件解析失败":
+                    showSnackbar(getWindow().getDecorView(), s);
+                    break;
+                default:
+                    break;
+            }
+
             super.onPostExecute(s);
         }
     }

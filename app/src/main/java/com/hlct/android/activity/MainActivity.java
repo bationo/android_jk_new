@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +23,9 @@ import com.hlct.android.R;
 import com.hlct.android.fragment.StocktakingDetailFragment;
 import com.hlct.android.fragment.StocktakingFragment;
 import com.hlct.android.util.ActivityUtils;
+import com.hlct.android.util.ToastUtil;
 
 import static com.hlct.android.R.id.toolbar;
-import static com.hlct.android.util.SnackbarUtil.showSnackbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = MainActivity.this;
         ActivityUtils.getInstance().addActivity(this);
         mToolBar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolBar);
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //fragment 管理
         addFragment();
-
     }
 
     /**
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction mTransaction = mManager.beginTransaction();
         stocktakingFragment = new StocktakingFragment();
         mTransaction.add(R.id.activity_main_linear_container,stocktakingFragment,STOCKTAKING_FRAGMENT_TAG);
-        zFragment = new StocktakingDetailFragment();
-        mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");
+        /*zFragment = new StocktakingDetailFragment();
+        mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");*/
         mTransaction.commit();
     }
 
@@ -112,16 +113,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_stocktaking) {
+            //TODO 重复点击报错
             FragmentTransaction mTransaction = mManager.beginTransaction();
             mTransaction.show(stocktakingFragment);
             mTransaction.hide(zFragment);
             mTransaction.commit();
 
         } else if (id == R.id.nav_gallery) {
-            FragmentTransaction mTransaction = mManager.beginTransaction();
+            /*FragmentTransaction mTransaction = mManager.beginTransaction();
             mTransaction.show(zFragment);
             mTransaction.hide(stocktakingFragment);
-            mTransaction.commit();
+            mTransaction.commit();*/
 
         } else if (id == R.id.nav_slideshow) {
             /*FragmentTransaction mTransaction = mManager.beginTransaction();
@@ -162,7 +164,10 @@ public class MainActivity extends AppCompatActivity
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             Log.d("onKeyDown", "" + keyCode);
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                showSnackbar(getWindow().getDecorView(), "再按一次退出");
+                //showSnackbar(getWindow().getDecorView(), "再按一次退出");
+                new ToastUtil(mContext,"再按一次退出",1500)
+                        .setGravity(Gravity.CENTER,0,200)
+                        .show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 ActivityUtils.getInstance().destory();

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="16dp"
+              android:paddingTop="16dp"
+              android:elevation="4dp"
+    >
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_layout_line1"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/tv_ripple_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:contentDescription="@string/rfid_scan"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:src="@mipmap/rfid_grey_64"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/rfid_scan"
+            android:textSize="22sp"
+            android:textColor="@color/textPrimary"/>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/bottom_sheet_layout_line2"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/tv_ripple_bg"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:contentDescription="@string/QR_scan"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:src="@mipmap/qr_grey_64"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/QR_scan"
+            android:textSize="22sp"
+            android:textColor="@color/textPrimary"
+            />
+    </LinearLayout>
+
+</LinearLayout>

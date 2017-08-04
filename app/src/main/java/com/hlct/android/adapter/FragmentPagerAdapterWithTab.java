@@ -12,14 +12,14 @@ import java.util.ArrayList;
 
 public class FragmentPagerAdapterWithTab extends FragmentPagerAdapter{
     private ArrayList<Fragment> mList;
-    private ArrayList<String> mTab;
+
     public FragmentPagerAdapterWithTab(FragmentManager fm) {
         super(fm);
     }
-    public FragmentPagerAdapterWithTab(FragmentManager fm, ArrayList<Fragment> mList, ArrayList<String> mTab) {
+    public FragmentPagerAdapterWithTab(FragmentManager fm, ArrayList<Fragment> mList) {
         super(fm);
         this.mList = mList;
-        this.mTab = mTab;
+
     }
     @Override
     public Fragment getItem(int position) {
@@ -30,9 +30,9 @@ public class FragmentPagerAdapterWithTab extends FragmentPagerAdapter{
     public int getCount() {
         return mList.size();
     }
+
     @Override
     public CharSequence getPageTitle(int position) {
-        //return super.getPageTitle(position);
-        return mTab.get(position);
+        return super.getPageTitle(position);
     }
 }

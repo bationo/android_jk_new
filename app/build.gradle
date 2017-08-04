@@ -56,4 +56,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'junit:junit:4.12'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile files('libs/uhf_1_v1.0.jar')
+    compile files('libs/sp.jar')
+    compile files('libs/SerialPort (2).jar')
 }

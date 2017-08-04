@@ -17,16 +17,16 @@
         android:background="@color/cardview_light_background"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="2dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
-
-
+            tools:layout_editor_absoluteY="0dp"
+            >
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/stocktaking_toolbar"
@@ -35,6 +35,7 @@
                 android:background="@color/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:elevation="4dp"
                 >
 
                 <TextView
@@ -144,10 +145,18 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:tabIndicatorColor="#f92e2e"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="#f92e2e"
-            app:tabTextColor="@color/textSecondary"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp">
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/tab_layout_item"/>
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout="@layout/tab_layout_item2"/>
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -167,6 +176,7 @@
             android:id="@+id/stocktaking_viewpager"
             android:layout_width="match_parent"
             android:layout_height="660dp"
+            android:layout_marginTop="8dp"
             >
         </android.support.v4.view.ViewPager>
     </LinearLayout>

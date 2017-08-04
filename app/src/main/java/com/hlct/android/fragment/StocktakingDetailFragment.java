@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,25 @@ import android.widget.LinearLayout;
 
 import com.hlct.android.R;
 import com.hlct.android.adapter.DetailRecyclerAdapter;
+import com.hlct.android.bean.Detail;
+import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.DetailDao;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lazylee on 2017/7/26.
  */
 
 public class StocktakingDetailFragment extends Fragment {
+
+    // 注意，tag用于 打印LOG信息时最多 23个字符
     private static String TAG = "StocktakingDetailFragment";
     private Context mContext;
     private View mRootView;
@@ -31,7 +43,8 @@ public class StocktakingDetailFragment extends Fragment {
     private DetailRecyclerAdapter mRecyclerAdapter;
 
     /*****data*****/
-    private ArrayList<String> mList = new ArrayList<>();
+    private List<Detail> mList = new ArrayList<>();
+    private long planId;
 
     @Nullable
     @Override
@@ -45,7 +58,7 @@ public class StocktakingDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mContext = getActivity();
-        initData();
+
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_detail_recycler);
         mRecyclerAdapter = new DetailRecyclerAdapter(mContext, mList);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
@@ -54,7 +67,7 @@ public class StocktakingDetailFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
-        //TODO 设置下来加载更多
+        //设置下来加载更多
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.fragment_stocktaking_detail_SR);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
@@ -62,16 +75,36 @@ public class StocktakingDetailFragment extends Fragment {
             @Override
             public void onRefresh() {
                 //TODO 下拉刷新加载更多数据
-                try {
-                    Thread.sleep(2000);
-                    if(mSwipeRefreshLayout.isRefreshing()){
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("DTFragment------->", "onPause方法调用");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+        Log.e("DTFragment------->", "onResume方法调用");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -79,7 +112,20 @@ public class StocktakingDetailFragment extends Fragment {
      */
     private void initData() {
         //TODO 加载数据
-
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        Log.e("DTFragment------->", "planid ====" + planId);
+        List<Detail> list = daoSession.getDetailDao().queryBuilder()
+                .where(DetailDao.Properties.PlanId.eq(planId))
+                .orderAsc(DetailDao.Properties.DetailId)
+                .list();
+        mList.clear();
+        mList.addAll(list);
+        mRecyclerAdapter.notifyDataSetChanged();
+        //TODO 根据 是否盘点| planId  条件查询到结果
+       /* mList = daoSession.getDetailDao().queryBuilder()
+                .where(DetailDao.Properties.InventoryState.eq("未盘点"))
+                .orderAsc(DetailDao.Properties.DetailId)
+                .list();*/
     }
 
     @Nullable
@@ -87,4 +133,17 @@ public class StocktakingDetailFragment extends Fragment {
     public View getView() {
         return super.getView();
     }
+
+
+    /**
+     * 接收id
+     *
+     * @param id 消息事件
+     */
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onHandleId(Long id) {
+        this.planId = id;
+        Log.e("DTFragment------->", "收到的planid号是----->" + planId);
+    }
+
 }

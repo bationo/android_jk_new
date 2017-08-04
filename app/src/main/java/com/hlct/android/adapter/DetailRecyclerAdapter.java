@@ -1,6 +1,7 @@
 package com.hlct.android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hlct.android.R;
+import com.hlct.android.activity.StocktakingDetailActivity;
+import com.hlct.android.bean.Detail;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by lazylee on 2017/7/26.
@@ -17,35 +22,37 @@ import java.util.ArrayList;
 
 public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailViewHolder> {
     private Context mContext;
-    private ArrayList<String> mList;
+    private List<Detail> mList;
 
-    public DetailRecyclerAdapter(Context mContext, ArrayList<String> mList) {
+    public DetailRecyclerAdapter(Context mContext, List<Detail> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
 
     @Override
     public DetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.stocktaking_detail_view,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.stocktaking_detail_view, parent, false);
         return new DetailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DetailViewHolder holder, int position) {
+    public void onBindViewHolder(DetailViewHolder holder, final int position) {
         //TODO item的点击事件 和 赋值
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                EventBus.getDefault().postSticky(position);
+                mContext.startActivity(new Intent(mContext, StocktakingDetailActivity.class));
             }
         });
-        holder.mTVAssertName.setText(mList.get(position));
-        holder.mTVNumber.setText(mList.get(position));
-        holder.mTVAssertRFID.setText(mList.get(position));
-        holder.mTVAssertUser.setText(mList.get(position));
-        holder.mTVAssertType.setText(mList.get(position));
-        holder.mTVAssertUnit.setText(mList.get(position));
-        holder.mTVAssertDepartment.setText(mList.get(position));
+        holder.mTVAssertName.setText(mList.get(position).getPropertyName());
+        holder.mTVNumber.setText(position + "");
+        holder.mTVAssertRFID.setText(mList.get(position).getPropertyRfid());
+        //TODO 使用数据掉替换 user
+        holder.mTVAssertUser.setText(mList.get(position).getUserId()+"");
+        holder.mTVAssertType.setText("办公用品");
+        holder.mTVAssertUnit.setText("华夏银行");
+        holder.mTVAssertDepartment.setText("科技部");
 
     }
 
@@ -54,6 +61,7 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailViewHolder
         return mList.size();
     }
 }
+
 class DetailViewHolder extends RecyclerView.ViewHolder {
     TextView mTVAssertName;
     TextView mTVNumber;

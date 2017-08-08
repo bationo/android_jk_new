@@ -1,69 +1,76 @@
 package com.hlct.android.bean;
 
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Unique;
+import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
 
-/**
- * @Author : mengyuan.cheng
- * @Version : 2017/7/5
- * @E-mail : mengyuan.cheng.mier@gmail.com
- * @Description : 网点信息实体类
- */
 @Entity
 public class BankInfo {
-    @Id@Unique
-    private Long bankId;//网点ID
-    @NotNull
-    private String bankName;//网点名称
-    private String lineId;//线路信息
-    private String bankTaskStatus;//网点任务状态
 
-    @Generated(hash = 2036481339)
-    public BankInfo(Long bankId, @NotNull String bankName, String lineId,
-            String bankTaskStatus) {
-        this.bankId = bankId;
-        this.bankName = bankName;
-        this.lineId = lineId;
-        this.bankTaskStatus = bankTaskStatus;
-    }
+	@Id
+    private Long id;
+	
+    private String bankId;
 
-    @Generated(hash = 1911969190)
-    public BankInfo() {
-    }
+    private String bankName;
 
-    public Long getBankId() {
-        return bankId;
-    }
+    private String bankLevel;
 
-    public void setBankId(Long bankId) {
-        this.bankId = bankId;
-    }
+    private String bankAddress;
+	@Transient
+    private Long parentsId;
 
-    public String getBankName() {
-        return bankName;
-    }
+	@Generated(hash = 1593952253)
+	public BankInfo(Long id, String bankId, String bankName, String bankLevel,
+									String bankAddress) {
+					this.id = id;
+					this.bankId = bankId;
+					this.bankName = bankName;
+					this.bankLevel = bankLevel;
+					this.bankAddress = bankAddress;
+	}
+	@Generated(hash = 1911969190)
+	public BankInfo() {
+	}
 
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getLineId() {
-        return lineId;
-    }
-
-    public void setLineId(String lineId) {
-        this.lineId = lineId;
-    }
-
-    public String getBankTaskStatus() {
-        return bankTaskStatus;
-    }
-
-    public void setBankTaskStatus(String bankTaskStatus) {
-        this.bankTaskStatus = bankTaskStatus;
-    }
+	public String getBankId() {
+		return bankId;
+	}
+	public void setBankId(String bankId) {
+		this.bankId = bankId;
+	}
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public String getBankLevel() {
+		return bankLevel;
+	}
+	public void setBankLevel(String bankLevel) {
+		this.bankLevel = bankLevel;
+	}
+	public String getBankAddress() {
+		return bankAddress;
+	}
+	public void setBankAddress(String bankAddress) {
+		this.bankAddress = bankAddress;
+	}
+	public Long getParentsId() {
+		return parentsId;
+	}
+	public void setParentsId(Long parentsId) {
+		this.parentsId = parentsId;
+	}
 
 }

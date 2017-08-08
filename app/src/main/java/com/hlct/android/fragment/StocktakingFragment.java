@@ -17,8 +17,12 @@ import com.hlct.android.R;
 import com.hlct.android.adapter.PlanRecyclerAdapter;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PlanBean;
+import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.PlanBeanDao;
+import com.hlct.android.greendao.UserDao;
+import com.hlct.android.util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +40,8 @@ public class StocktakingFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private PlanRecyclerAdapter mRecyclerAdapter;
 
-    /*****data*****/
+    /**************data*******************/
+    private long userID;
     private List<PlanBean> mList = new ArrayList<>();
     private ArrayList<Detail> detailList = new ArrayList<>();
 
@@ -94,8 +99,14 @@ public class StocktakingFragment extends Fragment {
      */
     private void initData() {
         //TODO 加载数据
+        userID = new SharedPreferencesUtils(mContext).getLoginUserID();
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
-        mList = daoSession.getPlanBeanDao().loadAll();
+        User user = daoSession.getUserDao().queryBuilder()
+                .where(UserDao.Properties.Id.eq(userID))
+                .unique();
+        mList = daoSession.getPlanBeanDao().queryBuilder()
+                .where(PlanBeanDao.Properties.InventoryPerson.eq(user.getName()))
+                .list();
     }
 
     @Nullable

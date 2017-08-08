@@ -14,21 +14,31 @@ import org.greenrobot.greendao.annotation.Id;
 public class PlanBean{
 
 	@Id
-    private Long planId;
-    private String planNumber;
-    private String inventoryPerson;
-    private String planTime;
-    private String confirmPerson;
-    private String confirmTime;
-    private Long departmentId;
-    private String remark;
+    private Long planId;			//盘点计划id
 
-	@Generated(hash = 1080765765)
-	public PlanBean(Long planId, String planNumber, String inventoryPerson,
-									String planTime, String confirmPerson, String confirmTime,
-									Long departmentId, String remark) {
+    private String planNumber;		//盘点计划编号
+
+	private Long personID;			//盘点人id
+
+    private String inventoryPerson;	//盘点人姓名
+
+    private String planTime;		//盘点人
+
+    private String confirmPerson;	//审核人
+
+    private String confirmTime;		//审核时间
+
+    private Long departmentId;		//所要盘点的部门
+
+    private String remark;			//备注
+
+	@Generated(hash = 1948500185)
+	public PlanBean(Long planId, String planNumber, Long personID,
+									String inventoryPerson, String planTime, String confirmPerson,
+									String confirmTime, Long departmentId, String remark) {
 					this.planId = planId;
 					this.planNumber = planNumber;
+					this.personID = personID;
 					this.inventoryPerson = inventoryPerson;
 					this.planTime = planTime;
 					this.confirmPerson = confirmPerson;
@@ -53,6 +63,15 @@ public class PlanBean{
 	public void setPlanNumber(String planNumber) {
 		this.planNumber = planNumber;
 	}
+
+	public Long getPersonID() {
+		return personID;
+	}
+
+	public void setPersonID(Long personID) {
+		this.personID = personID;
+	}
+
 	public String getInventoryPerson() {
 		return inventoryPerson;
 	}

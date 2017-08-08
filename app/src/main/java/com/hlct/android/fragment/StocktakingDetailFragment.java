@@ -116,6 +116,7 @@ public class StocktakingDetailFragment extends Fragment {
         Log.e("DTFragment------->", "planid ====" + planId);
         List<Detail> list = daoSession.getDetailDao().queryBuilder()
                 .where(DetailDao.Properties.PlanId.eq(planId))
+                .where(DetailDao.Properties.InventoryState.eq("未盘点"))
                 .orderAsc(DetailDao.Properties.DetailId)
                 .list();
         mList.clear();

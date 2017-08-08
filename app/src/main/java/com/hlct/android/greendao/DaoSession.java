@@ -8,14 +8,18 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.hlct.android.bean.AssetBean;
 import com.hlct.android.bean.BankInfo;
 import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.InfoBean;
 import com.hlct.android.bean.LoginUser;
 import com.hlct.android.bean.PlanBean;
 import com.hlct.android.bean.User;
 
+import com.hlct.android.greendao.AssetBeanDao;
 import com.hlct.android.greendao.BankInfoDao;
 import com.hlct.android.greendao.DetailDao;
+import com.hlct.android.greendao.InfoBeanDao;
 import com.hlct.android.greendao.LoginUserDao;
 import com.hlct.android.greendao.PlanBeanDao;
 import com.hlct.android.greendao.UserDao;
@@ -29,14 +33,18 @@ import com.hlct.android.greendao.UserDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig assetBeanDaoConfig;
     private final DaoConfig bankInfoDaoConfig;
     private final DaoConfig detailDaoConfig;
+    private final DaoConfig infoBeanDaoConfig;
     private final DaoConfig loginUserDaoConfig;
     private final DaoConfig planBeanDaoConfig;
     private final DaoConfig userDaoConfig;
 
+    private final AssetBeanDao assetBeanDao;
     private final BankInfoDao bankInfoDao;
     private final DetailDao detailDao;
+    private final InfoBeanDao infoBeanDao;
     private final LoginUserDao loginUserDao;
     private final PlanBeanDao planBeanDao;
     private final UserDao userDao;
@@ -45,11 +53,17 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        assetBeanDaoConfig = daoConfigMap.get(AssetBeanDao.class).clone();
+        assetBeanDaoConfig.initIdentityScope(type);
+
         bankInfoDaoConfig = daoConfigMap.get(BankInfoDao.class).clone();
         bankInfoDaoConfig.initIdentityScope(type);
 
         detailDaoConfig = daoConfigMap.get(DetailDao.class).clone();
         detailDaoConfig.initIdentityScope(type);
+
+        infoBeanDaoConfig = daoConfigMap.get(InfoBeanDao.class).clone();
+        infoBeanDaoConfig.initIdentityScope(type);
 
         loginUserDaoConfig = daoConfigMap.get(LoginUserDao.class).clone();
         loginUserDaoConfig.initIdentityScope(type);
@@ -60,25 +74,35 @@ public class DaoSession extends AbstractDaoSession {
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
 
+        assetBeanDao = new AssetBeanDao(assetBeanDaoConfig, this);
         bankInfoDao = new BankInfoDao(bankInfoDaoConfig, this);
         detailDao = new DetailDao(detailDaoConfig, this);
+        infoBeanDao = new InfoBeanDao(infoBeanDaoConfig, this);
         loginUserDao = new LoginUserDao(loginUserDaoConfig, this);
         planBeanDao = new PlanBeanDao(planBeanDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
 
+        registerDao(AssetBean.class, assetBeanDao);
         registerDao(BankInfo.class, bankInfoDao);
         registerDao(Detail.class, detailDao);
+        registerDao(InfoBean.class, infoBeanDao);
         registerDao(LoginUser.class, loginUserDao);
         registerDao(PlanBean.class, planBeanDao);
         registerDao(User.class, userDao);
     }
     
     public void clear() {
+        assetBeanDaoConfig.clearIdentityScope();
         bankInfoDaoConfig.clearIdentityScope();
         detailDaoConfig.clearIdentityScope();
+        infoBeanDaoConfig.clearIdentityScope();
         loginUserDaoConfig.clearIdentityScope();
         planBeanDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
+    }
+
+    public AssetBeanDao getAssetBeanDao() {
+        return assetBeanDao;
     }
 
     public BankInfoDao getBankInfoDao() {
@@ -87,6 +111,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public DetailDao getDetailDao() {
         return detailDao;
+    }
+
+    public InfoBeanDao getInfoBeanDao() {
+        return infoBeanDao;
     }
 
     public LoginUserDao getLoginUserDao() {

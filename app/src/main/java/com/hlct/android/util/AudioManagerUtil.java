@@ -23,5 +23,10 @@ public class AudioManagerUtil {
 
     public  void playDiOnce(){
         player.start();
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                player.release();
+            }
+        });
     }
 }

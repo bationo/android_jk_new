@@ -24,10 +24,11 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property BankId = new Property(0, Long.class, "bankId", true, "_id");
-        public final static Property BankName = new Property(1, String.class, "bankName", false, "BANK_NAME");
-        public final static Property LineId = new Property(2, String.class, "lineId", false, "LINE_ID");
-        public final static Property BankTaskStatus = new Property(3, String.class, "bankTaskStatus", false, "BANK_TASK_STATUS");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property BankId = new Property(1, String.class, "bankId", false, "BANK_ID");
+        public final static Property BankName = new Property(2, String.class, "bankName", false, "BANK_NAME");
+        public final static Property BankLevel = new Property(3, String.class, "bankLevel", false, "BANK_LEVEL");
+        public final static Property BankAddress = new Property(4, String.class, "bankAddress", false, "BANK_ADDRESS");
     }
 
 
@@ -43,10 +44,11 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BANK_INFO\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY UNIQUE ," + // 0: bankId
-                "\"BANK_NAME\" TEXT NOT NULL ," + // 1: bankName
-                "\"LINE_ID\" TEXT," + // 2: lineId
-                "\"BANK_TASK_STATUS\" TEXT);"); // 3: bankTaskStatus
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"BANK_ID\" TEXT," + // 1: bankId
+                "\"BANK_NAME\" TEXT," + // 2: bankName
+                "\"BANK_LEVEL\" TEXT," + // 3: bankLevel
+                "\"BANK_ADDRESS\" TEXT);"); // 4: bankAddress
     }
 
     /** Drops the underlying database table. */
@@ -59,20 +61,29 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
     protected final void bindValues(DatabaseStatement stmt, BankInfo entity) {
         stmt.clearBindings();
  
-        Long bankId = entity.getBankId();
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
+        String bankId = entity.getBankId();
         if (bankId != null) {
-            stmt.bindLong(1, bankId);
-        }
-        stmt.bindString(2, entity.getBankName());
- 
-        String lineId = entity.getLineId();
-        if (lineId != null) {
-            stmt.bindString(3, lineId);
+            stmt.bindString(2, bankId);
         }
  
-        String bankTaskStatus = entity.getBankTaskStatus();
-        if (bankTaskStatus != null) {
-            stmt.bindString(4, bankTaskStatus);
+        String bankName = entity.getBankName();
+        if (bankName != null) {
+            stmt.bindString(3, bankName);
+        }
+ 
+        String bankLevel = entity.getBankLevel();
+        if (bankLevel != null) {
+            stmt.bindString(4, bankLevel);
+        }
+ 
+        String bankAddress = entity.getBankAddress();
+        if (bankAddress != null) {
+            stmt.bindString(5, bankAddress);
         }
     }
 
@@ -80,20 +91,29 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
     protected final void bindValues(SQLiteStatement stmt, BankInfo entity) {
         stmt.clearBindings();
  
-        Long bankId = entity.getBankId();
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
+        String bankId = entity.getBankId();
         if (bankId != null) {
-            stmt.bindLong(1, bankId);
-        }
-        stmt.bindString(2, entity.getBankName());
- 
-        String lineId = entity.getLineId();
-        if (lineId != null) {
-            stmt.bindString(3, lineId);
+            stmt.bindString(2, bankId);
         }
  
-        String bankTaskStatus = entity.getBankTaskStatus();
-        if (bankTaskStatus != null) {
-            stmt.bindString(4, bankTaskStatus);
+        String bankName = entity.getBankName();
+        if (bankName != null) {
+            stmt.bindString(3, bankName);
+        }
+ 
+        String bankLevel = entity.getBankLevel();
+        if (bankLevel != null) {
+            stmt.bindString(4, bankLevel);
+        }
+ 
+        String bankAddress = entity.getBankAddress();
+        if (bankAddress != null) {
+            stmt.bindString(5, bankAddress);
         }
     }
 
@@ -105,32 +125,34 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
     @Override
     public BankInfo readEntity(Cursor cursor, int offset) {
         BankInfo entity = new BankInfo( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // bankId
-            cursor.getString(offset + 1), // bankName
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // lineId
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // bankTaskStatus
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // bankId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // bankName
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // bankLevel
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // bankAddress
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, BankInfo entity, int offset) {
-        entity.setBankId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setBankName(cursor.getString(offset + 1));
-        entity.setLineId(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setBankTaskStatus(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setBankId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setBankName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setBankLevel(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setBankAddress(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     @Override
     protected final Long updateKeyAfterInsert(BankInfo entity, long rowId) {
-        entity.setBankId(rowId);
+        entity.setId(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(BankInfo entity) {
         if(entity != null) {
-            return entity.getBankId();
+            return entity.getId();
         } else {
             return null;
         }
@@ -138,7 +160,7 @@ public class BankInfoDao extends AbstractDao<BankInfo, Long> {
 
     @Override
     public boolean hasKey(BankInfo entity) {
-        return entity.getBankId() != null;
+        return entity.getId() != null;
     }
 
     @Override

@@ -11,7 +11,7 @@
     tools:layout_editor_absoluteY="25dp">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/stocktaking_appbar_layout"
+        android:id="@+id/activity_stocktaking_plan_appbar_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
@@ -29,7 +29,7 @@
             >
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/stocktaking_toolbar"
+                android:id="@+id/activity_stocktaking_plan_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@color/colorPrimary"
@@ -39,7 +39,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/stocktaking_toolbar_title"
+                    android:id="@+id/activity_stocktaking_plan_toolbar_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="60dp"
@@ -55,41 +55,44 @@
                 android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:padding="8dp">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/stocktaking_data"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/plan_number"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
 
                 <TextView
-                    android:id="@+id/stocktaking_tv_date"
+                    android:id="@+id/activity_stocktaking_plan_tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/stocktaking_plan"
+                    android:paddingStart="8dp"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/stocktaking_data"
+                    android:gravity="end"
+                    android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                    android:id="@+id/activity_stocktaking_plan_tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_date"
                     android:paddingStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="48dp"
-                    android:paddingStart="8dp"
-                    android:text="@string/stocktaking_count"
-                    android:textSize="18sp"
-                    tools:ignore="RtlSymmetry"/>
 
-                <TextView
-                    android:id="@+id/stocktaking_tv_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_111"
-                    android:paddingStart="8dp"
-                    android:textSize="18sp"
-                    tools:ignore="RtlSymmetry"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,7 +111,7 @@
                     tools:ignore="RtlSymmetry"/>
 
                 <TextView
-                    android:id="@+id/stocktaking_tv_person"
+                    android:id="@+id/activity_stocktaking_plan_tv_person"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_person"
@@ -117,27 +120,31 @@
                     tools:ignore="RtlSymmetry"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="92dp"
+                    android:layout_marginStart="64dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
                     android:paddingStart="8dp"
-                    android:text="@string/stocktaking_counted"
+                    android:text="@string/assert_user_department"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
 
                 <TextView
-                    android:id="@+id/stocktaking_tv_counted"
+                    android:id="@+id/activity_stocktaking_plan_tv_department"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_111"
+                    android:hint="@string/hint_assert_department"
                     android:paddingStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/stocktaking_tab_layout"
+            android:id="@+id/activity_stocktaking_plan_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="end"
@@ -169,13 +176,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stocktaking_appbar_layout"
+        app:layout_constraintTop_toBottomOf="@+id/activity_stocktaking_plan_appbar_layout"
         app:layout_constraintVertical_bias="0.0"
         android:weightSum="1">
         <android.support.v4.view.ViewPager
-            android:id="@+id/stocktaking_viewpager"
+            android:id="@+id/activity_stocktaking_plan_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="660dp"
+            android:layout_height="635dp"
             android:layout_marginTop="8dp"
             >
         </android.support.v4.view.ViewPager>

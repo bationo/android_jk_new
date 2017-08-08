@@ -18,11 +18,17 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.hlct.android.R;
+import com.hlct.android.bean.User;
+import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.fragment.StocktakingDetailFragment;
 import com.hlct.android.fragment.StocktakingFragment;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.UserDao;
 import com.hlct.android.util.ActivityUtils;
+import com.hlct.android.util.SharedPreferencesUtils;
 import com.hlct.android.util.ToastUtil;
 
 import static com.hlct.android.R.id.toolbar;
@@ -43,11 +49,13 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolBar;
     FloatingActionButton fab;
     NavigationView navigationView;
-
+    private TextView mTVNavHeaderName;
+    private TextView mTVNavHeaderDepartment;
     /****************misc********************/
     FragmentManager mManager;
     StocktakingFragment stocktakingFragment;
     StocktakingDetailFragment zFragment;
+    private long userID;      //登陆的user 的id
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +64,6 @@ public class MainActivity extends AppCompatActivity
         ActivityUtils.getInstance().addActivity(this);
         mToolBar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolBar);
-
         initView();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +77,21 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //fragment 管理
         addFragment();
+        initData();
+    }
+
+    /**
+     * 加载预先需要的数据
+     */
+    private void initData() {
+        userID = new SharedPreferencesUtils(mContext).getLoginUserID();
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        User user = daoSession.getUserDao().queryBuilder()
+                .where(UserDao.Properties.Id.eq(userID))
+                .unique();
+        mTVNavHeaderDepartment.setText(user.getDepartmentName());
+        mTVNavHeaderName.setText(user.getName());
+
     }
 
     /**
@@ -94,6 +116,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mTVNavHeaderName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_name);
+        mTVNavHeaderDepartment = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_department);
     }
 
     @Override

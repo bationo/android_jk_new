@@ -1,5 +1,6 @@
 package com.hlct.android.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
 import com.hlct.android.bean.ResultInfo;
 import com.hlct.android.bean.User;
@@ -24,6 +24,7 @@ import com.hlct.android.http.APIService;
 import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
+import com.hlct.android.util.SharedPreferencesUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.hlct.android.DataCache.DataCache.getParseResult;
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
-import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_USER;
 import static com.hlct.android.constant.DatabaseConstant.setupDatabase;
 import static com.hlct.android.constant.HttpConstant.BASE_SERVER_URL;
 import static com.hlct.android.constant.HttpConstant.flag;
@@ -46,6 +46,7 @@ import static com.hlct.android.util.SnackbarUtil.showSnackbar;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
+    private Context mContext;
     // UI references
     private AutoCompleteTextView mLoginName;
 
@@ -65,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = LoginActivity.this;
         ActivityUtils.getInstance().addActivity(this);
         //初始化数据库
         daoSession = setupDatabase(this);
@@ -197,7 +199,20 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             boolean flag = getParseResult(getApplicationContext(), DATACHCHE_FILE_RESULT);
             String s = "";
-            if (flag == true) {//如果数据解析成功
+            User user = daoSession.getUserDao().queryBuilder()
+                    .where(UserDao.Properties.LoginName.eq(LOGINNAME))
+                    .unique();
+            if (user != null && user.getPassword().equals(PASSWORD)) {
+                //将user id 保存在键值对中.
+                new SharedPreferencesUtils(mContext).setLoginUserID(user.getId());
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                s = "账号密码有误";
+            }
+            /*if (flag) {//如果数据解析成功
                 //查询数据
                 User user = daoSession.queryBuilder(User.class)
                         .where(UserDao.Properties.LoginName.eq(LOGINNAME))
@@ -216,9 +231,10 @@ public class LoginActivity extends AppCompatActivity {
                     s = "账号密码有误";
                 }
 
-            } else if (flag == false) {//如果失败
+            } else {//如果失败
                 s = "文件解析失败";
             }
+            return s;*/
             return s;
         }
 
@@ -230,10 +246,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             materialDialog.dismiss();
-            switch (s){
+            switch (s) {
                 case "账号密码有误":
 
-                    mPasswordView.setError(s,null);
+                    mPasswordView.setError(s, null);
                     break;
                 case "文件解析失败":
                     showSnackbar(getWindow().getDecorView(), s);

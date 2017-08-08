@@ -6,6 +6,9 @@ import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
 
+/**
+ * 对应的是 盘点详情表中的数据
+ */
 @Entity
 public class Detail implements Serializable {
 
@@ -15,12 +18,12 @@ public class Detail implements Serializable {
      * 详情id
      */
     @Id
-    private Long detailId;
+    private Long detailId;              //盘点详情 id
 
     /**
      * 计划id
      */
-    private Long planId;
+    private Long planId;                //所属的盘点计划id
 
     /**
      * 盘点人员

@@ -19,8 +19,13 @@ import android.widget.TextView;
 
 import com.hlct.android.R;
 import com.hlct.android.adapter.FragmentPagerAdapterWithTab;
+import com.hlct.android.bean.InfoBean;
 import com.hlct.android.bean.PlanBean;
+import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.fragment.StocktakingDetailFragment;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.InfoBeanDao;
+import com.hlct.android.greendao.PlanBeanDao;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,8 +44,8 @@ public class StocktakingPlanActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private TextView mTVDate;
     private TextView mTVPerson;
-    private TextView mTVCount;
-    private TextView mTVCounted;
+    private TextView mTVPlanNumber;
+    private TextView mTVDepartment;
     private ArrayList<Fragment> mFragments;
 
     private TabItem tabItem1;
@@ -140,7 +145,17 @@ public class StocktakingPlanActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initDate();
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        PlanBean planBean = daoSession.getPlanBeanDao().queryBuilder()
+                .where(PlanBeanDao.Properties.PlanId.eq(id))
+                .unique();
+        InfoBean department  = daoSession.getInfoBeanDao().queryBuilder()
+                .where(InfoBeanDao.Properties.DepartmentId.eq(planBean.getDepartmentId()))
+                .unique();
+        mTVDate.setText(planBean.getPlanTime());
+        mTVPerson.setText(planBean.getInventoryPerson());
+        mTVPlanNumber.setText(planBean.getPlanNumber());
+        mTVDepartment.setText(department.getDepartmentName());
     }
 
     @Override
@@ -164,14 +179,14 @@ public class StocktakingPlanActivity extends AppCompatActivity {
      * 初始化 布局控件
      */
     private void initView() {
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.stocktaking_appbar_layout);
-        mToolBar = (Toolbar) findViewById(R.id.stocktaking_toolbar);
-        mTabLayout = (TabLayout) findViewById(R.id.stocktaking_tab_layout);
-        mViewPager = (ViewPager) findViewById(R.id.stocktaking_viewpager);
-        mTVDate = (TextView) findViewById(R.id.stocktaking_tv_date);
-        mTVPerson = (TextView) findViewById(R.id.stocktaking_tv_person);
-        mTVCount = (TextView) findViewById(R.id.stocktaking_tv_count);
-        mTVCounted = (TextView) findViewById(R.id.stocktaking_tv_counted);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.activity_stocktaking_plan_appbar_layout);
+        mToolBar = (Toolbar) findViewById(R.id.activity_stocktaking_plan_toolbar);
+        mTabLayout = (TabLayout) findViewById(R.id.activity_stocktaking_plan_tab_layout);
+        mViewPager = (ViewPager) findViewById(R.id.activity_stocktaking_plan_viewpager);
+        mTVDate = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_date);
+        mTVPerson = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_person);
+        mTVPlanNumber = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_number);
+        mTVDepartment = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_department);
         tabItem1 = (TabItem) findViewById(R.id.tab_item1);
         tabItem2 = (TabItem) findViewById(R.id.tab_item2);
         View view1 = LayoutInflater.from(mContext).inflate(R.layout.tab_layout_item,null);
@@ -186,12 +201,9 @@ public class StocktakingPlanActivity extends AppCompatActivity {
     /**
      * 初始化 第一次页面生成时需要生成的数据
      */
-
     public void initDate() {
-        /*for (String tab : tabs) {
-            mTabs.add(tab);
-        }*/
-
+        Log.e("initData", "收到的id号是----->" + id);
+        //TODO 区别开哪个是盘点过的,那个是没有盘点过得
         mFragments = new ArrayList<>();
         StocktakingDetailFragment fragment = new StocktakingDetailFragment();
         StocktakingDetailFragment fragment1 = new StocktakingDetailFragment();

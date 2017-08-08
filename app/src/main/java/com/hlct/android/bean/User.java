@@ -2,6 +2,7 @@ package com.hlct.android.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
@@ -10,21 +11,31 @@ import java.util.Date;
 @Entity
 public class User implements Serializable {
     private static final long serialVersionUID = 2111121112112111220L;
+    @Id
+    private Long id;                    //user id
 
-    private Long id;
+    private String userCode;            //user 工作编号
 
-    private String userCode;
+    private String loginName;           //登陆名
 
-    private String loginName;
+    private String password;            //登陆密码
 
-    private String password;
+    private String email;               //e-mail
 
-    private String email;
+    private String sex;                 //性别
 
-    private String sex;
+    private String telephone;           //电话
 
-    private String telephone;
-    @Transient   //表示这个字段不在数据库中储存
+    private String name;                //user 姓名
+
+    private Long departmentId;          //User 所在部门id
+
+    private String departmentName;      //所在部门名称
+
+    private String bankName;            //所在单位名称
+
+    private Long bankId;                //所在单位id
+    @Transient  //表示这个字段不在数据库中储存
     private String remark;
     @Transient
     private Date createDate;
@@ -32,40 +43,28 @@ public class User implements Serializable {
     private Date updateDate;
     @Transient
     private Date lastLoginDate;
-
-    private String name;
     @Transient
     private String deleted;
-
+    @Transient
     private Long createUserId;
-
-    private Long departmentId;
-    
-	private String departmentName;
-
-	private String bankName;
-
+    @Transient
     private Long updateUserId;
-
+    @Transient
     private String createUserName;
-
+    @Transient
     private String updateUserName;
-
+    @Transient
     private String roleNames;
-
+    @Transient
     private String newPassword;
-
+    @Transient
     private Long version;
 
-    private Long bankId;
-
-    @Generated(hash = 2104371717)
+    @Generated(hash = 22908639)
     public User(Long id, String userCode, String loginName, String password,
             String email, String sex, String telephone, String name,
-            Long createUserId, Long departmentId, String departmentName,
-            String bankName, Long updateUserId, String createUserName,
-            String updateUserName, String roleNames, String newPassword,
-            Long version, Long bankId) {
+            Long departmentId, String departmentName, String bankName,
+            Long bankId) {
         this.id = id;
         this.userCode = userCode;
         this.loginName = loginName;
@@ -74,16 +73,9 @@ public class User implements Serializable {
         this.sex = sex;
         this.telephone = telephone;
         this.name = name;
-        this.createUserId = createUserId;
         this.departmentId = departmentId;
         this.departmentName = departmentName;
         this.bankName = bankName;
-        this.updateUserId = updateUserId;
-        this.createUserName = createUserName;
-        this.updateUserName = updateUserName;
-        this.roleNames = roleNames;
-        this.newPassword = newPassword;
-        this.version = version;
         this.bankId = bankId;
     }
 
@@ -194,6 +186,7 @@ public class User implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getDepartmentName() {
         return departmentName;
     }

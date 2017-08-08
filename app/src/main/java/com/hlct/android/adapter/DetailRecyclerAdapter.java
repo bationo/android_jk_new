@@ -10,7 +10,14 @@ import android.widget.TextView;
 
 import com.hlct.android.R;
 import com.hlct.android.activity.StocktakingDetailActivity;
+import com.hlct.android.bean.AssetBean;
 import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.MessageEvent;
+import com.hlct.android.bean.User;
+import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.greendao.AssetBeanDao;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.UserDao;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -41,18 +48,25 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().postSticky(position);
+                EventBus.getDefault().postSticky(
+                        new MessageEvent("DetailRecyclerAdapter","StocktakingDetailActivity",mList.get(position).getDetailId()));
                 mContext.startActivity(new Intent(mContext, StocktakingDetailActivity.class));
             }
         });
-        holder.mTVAssertName.setText(mList.get(position).getPropertyName());
-        holder.mTVNumber.setText(position + "");
-        holder.mTVAssertRFID.setText(mList.get(position).getPropertyRfid());
-        //TODO 使用数据掉替换 user
-        holder.mTVAssertUser.setText(mList.get(position).getUserId()+"");
-        holder.mTVAssertType.setText("办公用品");
-        holder.mTVAssertUnit.setText("华夏银行");
-        holder.mTVAssertDepartment.setText("科技部");
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        AssetBean assetBean = daoSession.getAssetBeanDao().queryBuilder()
+                .where(AssetBeanDao.Properties.Id.eq(mList.get(position).getPropertyId()))
+                .unique();
+        User user = daoSession.getUserDao().queryBuilder()
+                .where(UserDao.Properties.Id.eq(mList.get(position).getUserId()))
+                .unique();
+        holder.mTVAssertName.setText(assetBean.getFacilityName());
+        holder.mTVNumber.setText(assetBean.getFacilityNumber());
+        holder.mTVAssertRFID.setText(assetBean.getRfid());
+        holder.mTVAssertUser.setText(user.getName());
+        holder.mTVAssertType.setText(assetBean.getFacilityType());
+        holder.mTVAssertUnit.setText(user.getBankName());
+        holder.mTVAssertDepartment.setText(user.getDepartmentName());
 
     }
 

@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import com.hlct.android.R;
 import com.hlct.android.activity.StocktakingPlanActivity;
+import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PlanBean;
+import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.DetailDao;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,14 +48,25 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
             public void onClick(View v) {
 
                 EventBus.getDefault().postSticky(mList.get(position).getPlanId());
-                Log.e("plan id ------------->",mList.get(position).getPlanId()+"");
+                Log.e("plan id ------------->", mList.get(position).getPlanId() + "");
                 mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
+        holder.mTVTitle.setText(mList.get(position).getPlanNumber());
         holder.mTVTime.setText(mList.get(position).getPlanTime());
-        holder.mTVPerson.setText(mList.get(position).getConfirmPerson());
-        holder.mTVCount.setText("20");
-        holder.mTVCounted.setText("0");
+        holder.mTVPerson.setText(mList.get(position).getInventoryPerson());
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        List<Detail> details = daoSession.getDetailDao().queryBuilder()
+                .where(DetailDao.Properties.PlanId.eq(mList.get(position).getPlanId()))
+                .list();
+        holder.mTVCount.setText(details.size() + "");
+        int counted = 0;
+        for (Detail detail : details) {
+            if (detail.getInventoryState().equals("已盘点")) {
+                counted += 1;
+            }
+        }
+        holder.mTVCounted.setText(counted + "");
         holder.mTVStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +92,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
 }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
+    TextView mTVTitle;
     TextView mTVTime;
     TextView mTVPerson;
     TextView mTVCount;
@@ -86,6 +102,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
 
     public MyViewHolder(View itemView) {
         super(itemView);
+        mTVTitle = (TextView) itemView.findViewById(R.id.stocktaking_plan_title);
         mTVTime = (TextView) itemView.findViewById(R.id.stocktaking_plan_date);
         mTVPerson = (TextView) itemView.findViewById(R.id.stocktaking_plan_person);
         mTVCount = (TextView) itemView.findViewById(R.id.stocktaking_plan_count);

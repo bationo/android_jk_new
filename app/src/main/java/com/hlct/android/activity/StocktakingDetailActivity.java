@@ -11,8 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hlct.android.R;
+import com.hlct.android.bean.AssetBean;
+import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.MessageEvent;
+import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.greendao.AssetBeanDao;
 import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.DetailDao;
+import com.hlct.android.greendao.UserDao;
+import com.hlct.android.util.RfidScanDialog;
 import com.hlct.android.util.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,12 +38,12 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     private TextView mTVAssertType;
     private TextView mTVAssertRFID;
     private TextView mTVUser;
-    private TextView mTVDeprtment;
+    private TextView mTVDepartment;
     private TextView mTVUnit;
     private BottomSheetDialog mBottomSheetDialog;
     private LinearLayout mLineFRDIScan;
     private LinearLayout mLineQRScan;
-
+    private RfidScanDialog mDialog;
     private long detailId;
 
     @Override
@@ -44,7 +52,8 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
         setContentView(R.layout.activity_stocktaking_detail);
         mContext = StocktakingDetailActivity.this;
         initView();
-        initData();
+
+
     }
 
     /**
@@ -52,6 +61,25 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
      */
     private void initData() {
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        DetailDao detailDao = daoSession.getDetailDao();
+        Detail detail = detailDao.queryBuilder()
+                .where(DetailDao.Properties.DetailId.eq(detailId))
+                .unique();
+        UserDao userDao = daoSession.getUserDao();
+        User user = userDao.queryBuilder()
+                .where(UserDao.Properties.Id.eq(detail.getUserId()))
+                .unique();
+        AssetBean assetBean = daoSession.getAssetBeanDao().queryBuilder()
+                .where(AssetBeanDao.Properties.Id.eq(detail.getPropertyId()))
+                .unique();
+
+        mTVAssertRFID.setText(assetBean.getRfid());
+        mTVAssertName.setText(assetBean.getFacilityName());
+        mTVAssertType.setText(assetBean.getFacilityType());
+        mTVDepartment.setText(user.getDepartmentName());
+        mTVUser.setText(user.getName());
+        mTVUnit.setText(user.getBankName());
+
     }
 
     /**
@@ -65,7 +93,8 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
         mTVAssertName = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_name);
         mTVAssertType = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_type);
         mTVAssertRFID = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_rfid);
-        mTVDeprtment = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_department);
+        mTVUser = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_user);
+        mTVDepartment = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_department);
         mTVUnit = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_unit);
 
         View sheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet_layout,null);
@@ -78,6 +107,7 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
         mLineQRScan.setOnClickListener(this);
         mLineFRDIScan.setOnClickListener(this);
 
+        mDialog = new RfidScanDialog();
 
     }
 
@@ -96,12 +126,10 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
                 break;
             case R.id.bottom_sheet_layout_line1:
                 //TODO rfid扫描
-                new ToastUtil(mContext,"rfid 扫描",2000)
-                        .setGravity(Gravity.CENTER,0,200)
-                        .show();
                 if(mBottomSheetDialog.isShowing()){
                     mBottomSheetDialog.dismiss();
                 }
+                mDialog.show(getSupportFragmentManager(),"dialog");
                 break;
             case R.id.bottom_sheet_layout_line2:
                 //TODO QR扫描
@@ -111,7 +139,6 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
                 if(mBottomSheetDialog.isShowing()){
                     mBottomSheetDialog.dismiss();
                 }
-
                 break;
             default:
                 break;
@@ -125,20 +152,38 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     /**
      * 接受 fragmentDetailStocktaking传递过来的detailId ，用来加载数据
      *
-     * @param id detailID；
+     * @param messageEvent 消息事件；
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void receiveDetailId(int id) {
-        this.detailId = id;
+    public void receiveDetailId(MessageEvent messageEvent) {
+        if(messageEvent.getPublish().equals("DetailRecyclerAdapter") &&
+                messageEvent.getSubscriber().equals("StocktakingDetailActivity")){
+            this.detailId = (long) messageEvent.getMessage();
+        }
     }
-
 
 }

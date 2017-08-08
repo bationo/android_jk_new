@@ -26,12 +26,13 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
     public static class Properties {
         public final static Property PlanId = new Property(0, Long.class, "planId", true, "_id");
         public final static Property PlanNumber = new Property(1, String.class, "planNumber", false, "PLAN_NUMBER");
-        public final static Property InventoryPerson = new Property(2, String.class, "inventoryPerson", false, "INVENTORY_PERSON");
-        public final static Property PlanTime = new Property(3, String.class, "planTime", false, "PLAN_TIME");
-        public final static Property ConfirmPerson = new Property(4, String.class, "confirmPerson", false, "CONFIRM_PERSON");
-        public final static Property ConfirmTime = new Property(5, String.class, "confirmTime", false, "CONFIRM_TIME");
-        public final static Property DepartmentId = new Property(6, Long.class, "departmentId", false, "DEPARTMENT_ID");
-        public final static Property Remark = new Property(7, String.class, "remark", false, "REMARK");
+        public final static Property PersonID = new Property(2, Long.class, "personID", false, "PERSON_ID");
+        public final static Property InventoryPerson = new Property(3, String.class, "inventoryPerson", false, "INVENTORY_PERSON");
+        public final static Property PlanTime = new Property(4, String.class, "planTime", false, "PLAN_TIME");
+        public final static Property ConfirmPerson = new Property(5, String.class, "confirmPerson", false, "CONFIRM_PERSON");
+        public final static Property ConfirmTime = new Property(6, String.class, "confirmTime", false, "CONFIRM_TIME");
+        public final static Property DepartmentId = new Property(7, Long.class, "departmentId", false, "DEPARTMENT_ID");
+        public final static Property Remark = new Property(8, String.class, "remark", false, "REMARK");
     }
 
 
@@ -49,12 +50,13 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"PLAN_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: planId
                 "\"PLAN_NUMBER\" TEXT," + // 1: planNumber
-                "\"INVENTORY_PERSON\" TEXT," + // 2: inventoryPerson
-                "\"PLAN_TIME\" TEXT," + // 3: planTime
-                "\"CONFIRM_PERSON\" TEXT," + // 4: confirmPerson
-                "\"CONFIRM_TIME\" TEXT," + // 5: confirmTime
-                "\"DEPARTMENT_ID\" INTEGER," + // 6: departmentId
-                "\"REMARK\" TEXT);"); // 7: remark
+                "\"PERSON_ID\" INTEGER," + // 2: personID
+                "\"INVENTORY_PERSON\" TEXT," + // 3: inventoryPerson
+                "\"PLAN_TIME\" TEXT," + // 4: planTime
+                "\"CONFIRM_PERSON\" TEXT," + // 5: confirmPerson
+                "\"CONFIRM_TIME\" TEXT," + // 6: confirmTime
+                "\"DEPARTMENT_ID\" INTEGER," + // 7: departmentId
+                "\"REMARK\" TEXT);"); // 8: remark
     }
 
     /** Drops the underlying database table. */
@@ -77,34 +79,39 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
             stmt.bindString(2, planNumber);
         }
  
+        Long personID = entity.getPersonID();
+        if (personID != null) {
+            stmt.bindLong(3, personID);
+        }
+ 
         String inventoryPerson = entity.getInventoryPerson();
         if (inventoryPerson != null) {
-            stmt.bindString(3, inventoryPerson);
+            stmt.bindString(4, inventoryPerson);
         }
  
         String planTime = entity.getPlanTime();
         if (planTime != null) {
-            stmt.bindString(4, planTime);
+            stmt.bindString(5, planTime);
         }
  
         String confirmPerson = entity.getConfirmPerson();
         if (confirmPerson != null) {
-            stmt.bindString(5, confirmPerson);
+            stmt.bindString(6, confirmPerson);
         }
  
         String confirmTime = entity.getConfirmTime();
         if (confirmTime != null) {
-            stmt.bindString(6, confirmTime);
+            stmt.bindString(7, confirmTime);
         }
  
         Long departmentId = entity.getDepartmentId();
         if (departmentId != null) {
-            stmt.bindLong(7, departmentId);
+            stmt.bindLong(8, departmentId);
         }
  
         String remark = entity.getRemark();
         if (remark != null) {
-            stmt.bindString(8, remark);
+            stmt.bindString(9, remark);
         }
     }
 
@@ -122,34 +129,39 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
             stmt.bindString(2, planNumber);
         }
  
+        Long personID = entity.getPersonID();
+        if (personID != null) {
+            stmt.bindLong(3, personID);
+        }
+ 
         String inventoryPerson = entity.getInventoryPerson();
         if (inventoryPerson != null) {
-            stmt.bindString(3, inventoryPerson);
+            stmt.bindString(4, inventoryPerson);
         }
  
         String planTime = entity.getPlanTime();
         if (planTime != null) {
-            stmt.bindString(4, planTime);
+            stmt.bindString(5, planTime);
         }
  
         String confirmPerson = entity.getConfirmPerson();
         if (confirmPerson != null) {
-            stmt.bindString(5, confirmPerson);
+            stmt.bindString(6, confirmPerson);
         }
  
         String confirmTime = entity.getConfirmTime();
         if (confirmTime != null) {
-            stmt.bindString(6, confirmTime);
+            stmt.bindString(7, confirmTime);
         }
  
         Long departmentId = entity.getDepartmentId();
         if (departmentId != null) {
-            stmt.bindLong(7, departmentId);
+            stmt.bindLong(8, departmentId);
         }
  
         String remark = entity.getRemark();
         if (remark != null) {
-            stmt.bindString(8, remark);
+            stmt.bindString(9, remark);
         }
     }
 
@@ -163,12 +175,13 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
         PlanBean entity = new PlanBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // planId
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // planNumber
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // inventoryPerson
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // planTime
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // confirmPerson
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // confirmTime
-            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // departmentId
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // remark
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // personID
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // inventoryPerson
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // planTime
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // confirmPerson
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // confirmTime
+            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // departmentId
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // remark
         );
         return entity;
     }
@@ -177,12 +190,13 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
     public void readEntity(Cursor cursor, PlanBean entity, int offset) {
         entity.setPlanId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setPlanNumber(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setInventoryPerson(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setPlanTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setConfirmPerson(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setConfirmTime(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setDepartmentId(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
-        entity.setRemark(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setPersonID(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setInventoryPerson(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPlanTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setConfirmPerson(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setConfirmTime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setDepartmentId(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
+        entity.setRemark(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

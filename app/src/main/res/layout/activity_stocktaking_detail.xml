@@ -96,6 +96,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/activity_stocktaking_detail_line2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/tv_border_bg"
@@ -251,6 +252,28 @@
                 android:padding="8dp"
                 android:textSize="16sp"/>
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_stocktaking_detail_line3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/activity_stocktaking_detail_line2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/tv_new_assert_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:padding="16dp"
+            android:text="@string/new_asert_info"
+            android:textSize="20sp"
+            />
+
     </LinearLayout>
 
 

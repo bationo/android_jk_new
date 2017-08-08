@@ -15,7 +15,7 @@ import com.hlct.android.bean.User;
 /** 
  * DAO for table "USER".
 */
-public class UserDao extends AbstractDao<User, Void> {
+public class UserDao extends AbstractDao<User, Long> {
 
     public static final String TABLENAME = "USER";
 
@@ -24,7 +24,7 @@ public class UserDao extends AbstractDao<User, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", false, "ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UserCode = new Property(1, String.class, "userCode", false, "USER_CODE");
         public final static Property LoginName = new Property(2, String.class, "loginName", false, "LOGIN_NAME");
         public final static Property Password = new Property(3, String.class, "password", false, "PASSWORD");
@@ -32,17 +32,10 @@ public class UserDao extends AbstractDao<User, Void> {
         public final static Property Sex = new Property(5, String.class, "sex", false, "SEX");
         public final static Property Telephone = new Property(6, String.class, "telephone", false, "TELEPHONE");
         public final static Property Name = new Property(7, String.class, "name", false, "NAME");
-        public final static Property CreateUserId = new Property(8, Long.class, "createUserId", false, "CREATE_USER_ID");
-        public final static Property DepartmentId = new Property(9, Long.class, "departmentId", false, "DEPARTMENT_ID");
-        public final static Property DepartmentName = new Property(10, String.class, "departmentName", false, "DEPARTMENT_NAME");
-        public final static Property BankName = new Property(11, String.class, "bankName", false, "BANK_NAME");
-        public final static Property UpdateUserId = new Property(12, Long.class, "updateUserId", false, "UPDATE_USER_ID");
-        public final static Property CreateUserName = new Property(13, String.class, "createUserName", false, "CREATE_USER_NAME");
-        public final static Property UpdateUserName = new Property(14, String.class, "updateUserName", false, "UPDATE_USER_NAME");
-        public final static Property RoleNames = new Property(15, String.class, "roleNames", false, "ROLE_NAMES");
-        public final static Property NewPassword = new Property(16, String.class, "newPassword", false, "NEW_PASSWORD");
-        public final static Property Version = new Property(17, Long.class, "version", false, "VERSION");
-        public final static Property BankId = new Property(18, Long.class, "bankId", false, "BANK_ID");
+        public final static Property DepartmentId = new Property(8, Long.class, "departmentId", false, "DEPARTMENT_ID");
+        public final static Property DepartmentName = new Property(9, String.class, "departmentName", false, "DEPARTMENT_NAME");
+        public final static Property BankName = new Property(10, String.class, "bankName", false, "BANK_NAME");
+        public final static Property BankId = new Property(11, Long.class, "bankId", false, "BANK_ID");
     }
 
 
@@ -58,7 +51,7 @@ public class UserDao extends AbstractDao<User, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
-                "\"ID\" INTEGER," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"USER_CODE\" TEXT," + // 1: userCode
                 "\"LOGIN_NAME\" TEXT," + // 2: loginName
                 "\"PASSWORD\" TEXT," + // 3: password
@@ -66,17 +59,10 @@ public class UserDao extends AbstractDao<User, Void> {
                 "\"SEX\" TEXT," + // 5: sex
                 "\"TELEPHONE\" TEXT," + // 6: telephone
                 "\"NAME\" TEXT," + // 7: name
-                "\"CREATE_USER_ID\" INTEGER," + // 8: createUserId
-                "\"DEPARTMENT_ID\" INTEGER," + // 9: departmentId
-                "\"DEPARTMENT_NAME\" TEXT," + // 10: departmentName
-                "\"BANK_NAME\" TEXT," + // 11: bankName
-                "\"UPDATE_USER_ID\" INTEGER," + // 12: updateUserId
-                "\"CREATE_USER_NAME\" TEXT," + // 13: createUserName
-                "\"UPDATE_USER_NAME\" TEXT," + // 14: updateUserName
-                "\"ROLE_NAMES\" TEXT," + // 15: roleNames
-                "\"NEW_PASSWORD\" TEXT," + // 16: newPassword
-                "\"VERSION\" INTEGER," + // 17: version
-                "\"BANK_ID\" INTEGER);"); // 18: bankId
+                "\"DEPARTMENT_ID\" INTEGER," + // 8: departmentId
+                "\"DEPARTMENT_NAME\" TEXT," + // 9: departmentName
+                "\"BANK_NAME\" TEXT," + // 10: bankName
+                "\"BANK_ID\" INTEGER);"); // 11: bankId
     }
 
     /** Drops the underlying database table. */
@@ -129,59 +115,24 @@ public class UserDao extends AbstractDao<User, Void> {
             stmt.bindString(8, name);
         }
  
-        Long createUserId = entity.getCreateUserId();
-        if (createUserId != null) {
-            stmt.bindLong(9, createUserId);
-        }
- 
         Long departmentId = entity.getDepartmentId();
         if (departmentId != null) {
-            stmt.bindLong(10, departmentId);
+            stmt.bindLong(9, departmentId);
         }
  
         String departmentName = entity.getDepartmentName();
         if (departmentName != null) {
-            stmt.bindString(11, departmentName);
+            stmt.bindString(10, departmentName);
         }
  
         String bankName = entity.getBankName();
         if (bankName != null) {
-            stmt.bindString(12, bankName);
-        }
- 
-        Long updateUserId = entity.getUpdateUserId();
-        if (updateUserId != null) {
-            stmt.bindLong(13, updateUserId);
-        }
- 
-        String createUserName = entity.getCreateUserName();
-        if (createUserName != null) {
-            stmt.bindString(14, createUserName);
-        }
- 
-        String updateUserName = entity.getUpdateUserName();
-        if (updateUserName != null) {
-            stmt.bindString(15, updateUserName);
-        }
- 
-        String roleNames = entity.getRoleNames();
-        if (roleNames != null) {
-            stmt.bindString(16, roleNames);
-        }
- 
-        String newPassword = entity.getNewPassword();
-        if (newPassword != null) {
-            stmt.bindString(17, newPassword);
-        }
- 
-        Long version = entity.getVersion();
-        if (version != null) {
-            stmt.bindLong(18, version);
+            stmt.bindString(11, bankName);
         }
  
         Long bankId = entity.getBankId();
         if (bankId != null) {
-            stmt.bindLong(19, bankId);
+            stmt.bindLong(12, bankId);
         }
     }
 
@@ -229,65 +180,30 @@ public class UserDao extends AbstractDao<User, Void> {
             stmt.bindString(8, name);
         }
  
-        Long createUserId = entity.getCreateUserId();
-        if (createUserId != null) {
-            stmt.bindLong(9, createUserId);
-        }
- 
         Long departmentId = entity.getDepartmentId();
         if (departmentId != null) {
-            stmt.bindLong(10, departmentId);
+            stmt.bindLong(9, departmentId);
         }
  
         String departmentName = entity.getDepartmentName();
         if (departmentName != null) {
-            stmt.bindString(11, departmentName);
+            stmt.bindString(10, departmentName);
         }
  
         String bankName = entity.getBankName();
         if (bankName != null) {
-            stmt.bindString(12, bankName);
-        }
- 
-        Long updateUserId = entity.getUpdateUserId();
-        if (updateUserId != null) {
-            stmt.bindLong(13, updateUserId);
-        }
- 
-        String createUserName = entity.getCreateUserName();
-        if (createUserName != null) {
-            stmt.bindString(14, createUserName);
-        }
- 
-        String updateUserName = entity.getUpdateUserName();
-        if (updateUserName != null) {
-            stmt.bindString(15, updateUserName);
-        }
- 
-        String roleNames = entity.getRoleNames();
-        if (roleNames != null) {
-            stmt.bindString(16, roleNames);
-        }
- 
-        String newPassword = entity.getNewPassword();
-        if (newPassword != null) {
-            stmt.bindString(17, newPassword);
-        }
- 
-        Long version = entity.getVersion();
-        if (version != null) {
-            stmt.bindLong(18, version);
+            stmt.bindString(11, bankName);
         }
  
         Long bankId = entity.getBankId();
         if (bankId != null) {
-            stmt.bindLong(19, bankId);
+            stmt.bindLong(12, bankId);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
@@ -301,17 +217,10 @@ public class UserDao extends AbstractDao<User, Void> {
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // sex
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // telephone
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // name
-            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // createUserId
-            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // departmentId
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // departmentName
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // bankName
-            cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12), // updateUserId
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // createUserName
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // updateUserName
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // roleNames
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // newPassword
-            cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17), // version
-            cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18) // bankId
+            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // departmentId
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // departmentName
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // bankName
+            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11) // bankId
         );
         return entity;
     }
@@ -326,34 +235,30 @@ public class UserDao extends AbstractDao<User, Void> {
         entity.setSex(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setTelephone(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setCreateUserId(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
-        entity.setDepartmentId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
-        entity.setDepartmentName(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setBankName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setUpdateUserId(cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12));
-        entity.setCreateUserName(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setUpdateUserName(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setRoleNames(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
-        entity.setNewPassword(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
-        entity.setVersion(cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17));
-        entity.setBankId(cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18));
+        entity.setDepartmentId(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
+        entity.setDepartmentName(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setBankName(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setBankId(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(User entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(User entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(User entity) {
-        return null;
+    public Long getKey(User entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(User entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

@@ -92,4 +92,27 @@ public class SharedPreferencesUtils {
         editor.clear();
         editor.commit();
     }
+
+    /**
+     * 保存登陆用户的id
+     * @param loginUserID  user id
+     */
+    public void setLoginUserID(long loginUserID){
+        SharedPreferences sp = context.getSharedPreferences(SP_INFO,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("userID", loginUserID);
+        editor.commit();
+    }
+
+    /**
+     * 得到登陆用户 的id
+     * @return user id
+     */
+    public long getLoginUserID(){
+        SharedPreferences sp = context.getSharedPreferences(SP_INFO,
+                Context.MODE_PRIVATE);
+        return sp.getLong("userID",0);
+    }
+
 }

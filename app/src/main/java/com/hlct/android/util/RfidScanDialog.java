@@ -17,7 +17,14 @@ import android.widget.TextView;
 
 import com.handheld.UHF.UhfManager;
 import com.hlct.android.R;
+import com.hlct.android.activity.StocktakingPlanActivity;
 import com.hlct.android.adapter.DialogListAdapter;
+import com.hlct.android.bean.AssetBean;
+import com.hlct.android.bean.Detail;
+import com.hlct.android.constant.DatabaseConstant;
+import com.hlct.android.greendao.AssetBeanDao;
+import com.hlct.android.greendao.DaoSession;
+import com.hlct.android.greendao.DetailDao;
 import com.hlct.android.uhf.RFID;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +41,7 @@ import cn.pda.serialport.Tools;
  */
 
 public class RfidScanDialog extends DialogFragment implements View.OnClickListener {
-
+    private static  String TAG = "RfidScanDialog";
     private Context mContext;
     private View mRootView;
     private ListView mListView;
@@ -54,6 +61,9 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
     private boolean startFlag = false;   //判断btnStart的状态
 
     private String rfidTag;
+    private long mPlanID;
+    private List<Detail> mDetails;
+
     public RfidScanDialog() {
         super();
     }
@@ -67,7 +77,7 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e("RfidScanDialog ---->", "onCreate");
+        Log.e(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog_MinWidth);
 
@@ -76,7 +86,7 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("RfidScanDialog ---->", "onCreateView");
+        Log.e(TAG, "onCreateView");
         mRootView = inflater.inflate(R.layout.dialog_rfid_scan, container, false);
         rfidTag = getTag();
         return mRootView;
@@ -85,24 +95,24 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.e("RfidScanDialog ---->", "onViewCreate");
+        Log.e(TAG, "onViewCreate");
         mContext = getActivity();
+        EventBus.getDefault().register(this);
         mListView = (ListView) mRootView.findViewById(R.id.dialog_rfid_scan_list);
         mScan = (TextView) mRootView.findViewById(R.id.dialog_rfid_scan_btn);
         mScan.setOnClickListener(this);
         mCommit = (TextView) mRootView.findViewById(R.id.dialog_rfid_scan_commit);
-        mAdapter = new DialogListAdapter(mContext, mList);
+        mCommit.setOnClickListener(this);
+        mAdapter = new DialogListAdapter(mContext, mList, mPlanID);
         mListView.setAdapter(mAdapter);
-        Log.e("on create view---->", "set adapter");
         ScanThread scanThread = new ScanThread();
         scanThread.start();
     }
 
     @Override
     public void onStart() {
-        Log.e("RfidScanDialog ---->", "onStart");
+        Log.e(TAG, "onStart");
         super.onStart();
-        EventBus.getDefault().register(this);
         uhfManager = UhfManager.getInstance();
         if (uhfManager == null) {
             Log.e("uhfmanager ---->", "打开失败");
@@ -116,7 +126,6 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
 
     @Override
     public void onStop() {
-        Log.e("RfidScanDialog ---->", "onStop");
         super.onStop();
         EventBus.getDefault().unregister(this);
         startFlag = false;
@@ -128,7 +137,6 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
 
     @Override
     public void onDestroy() {
-        Log.e("RfidScanDialog ---->", "onDestroy");
         super.onDestroy();
         startFlag = false;
         if (uhfManager != null) {
@@ -152,9 +160,29 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
                 }
                 break;
             case R.id.dialog_rfid_scan_commit:
-                if (isVisible()) {
-                    this.dismiss();
+                //TODO 上传数据到数据库
+                DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+                for (RFID rfid : mList) {
+                    if (rfid.isCheck()) {
+                        //如果rfid 的盘点状态是盘点过了 根据Rfid找到资产id
+                        AssetBean assets = daoSession.getAssetBeanDao().queryBuilder()
+                                .where(AssetBeanDao.Properties.Rfid.eq(rfid.getRifd()))
+                                .unique();
+                        //根据rfid和planid 找到唯一detail
+                        Detail detail = daoSession.getDetailDao().queryBuilder()
+                                .where(DetailDao.Properties.PlanId.eq(mPlanID))
+                                .where(DetailDao.Properties.PropertyId.eq(assets.getId()))
+                                .unique();
+                        //将detail 更新为已盘点
+                        detail.setInventoryState("已盘点");
+                        detail.setPropertyRfid(assets.getRfid());
+                        daoSession.getDetailDao().update(detail);
+                    }
                 }
+                mList.clear();
+                mAdapter.notifyDataSetChanged();
+                dismiss();
+                ((StocktakingPlanActivity)mContext).refreshView();
                 break;
             default:
                 break;
@@ -201,7 +229,7 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
                     }
                     epcList = null;
                     try {
-                        Thread.sleep(30);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -229,13 +257,37 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
         if (!isContained) {
             RFID mRFID = new RFID();
             mRFID.setRifd(rfid);
-            if(rfid.equals(rfidTag)){
-                mRFID.setCheck(true);
+            for (Detail detail : mDetails) {
+                if (detail.getPropertyRfid().equals(rfid)) {
+                    mRFID.setCheck(true);
+                }
             }
             mList.add(mRFID);
             isContained = false;
         }
         Log.e("mlist siza---->", mList.size() + "");
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 接收id
+     *
+     * @param id 消息事件
+     */
+    @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
+    public void onHandleId(Long id) {
+        this.mPlanID = id;
+        Log.e("rfid scan dialog --->", "收到的plan id号是----->" + id);
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        mDetails = daoSession.getDetailDao().queryBuilder()
+                .where(DetailDao.Properties.PlanId.eq(mPlanID))
+                .where(DetailDao.Properties.InventoryState.eq("未盘点"))
+                .list();
+        for (Detail detail : mDetails) {
+            AssetBean asset = daoSession.getAssetBeanDao().queryBuilder()
+                    .where(AssetBeanDao.Properties.Id.eq(detail.getPropertyId()))
+                    .unique();
+            detail.setPropertyRfid(asset.getRfid());
+        }
     }
 }

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hlct.android.R;
@@ -20,10 +22,12 @@ import java.util.ArrayList;
 public class DialogListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<RFID> mList;
+    private long mPlanID;
 
-    public DialogListAdapter(Context mContext, ArrayList<RFID> mList) {
+    public DialogListAdapter(Context mContext, ArrayList<RFID> mList, long planID) {
         this.mContext = mContext;
         this.mList = mList;
+        this.mPlanID = planID;
     }
 
     @Override
@@ -42,26 +46,47 @@ public class DialogListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder holder;
         if (convertView == null) {
-            convertView =LayoutInflater.from(mContext).
-                    inflate(R.layout.dialog_rfid_scan_list_item,parent,false);
+            convertView = LayoutInflater.from(mContext).
+                    inflate(R.layout.dialog_rfid_scan_list_item, parent, false);
             holder = new ViewHolder();
             holder.mCheckBox = (CheckBox) convertView.findViewById(R.id.dialog_rfid_scan_check);
             holder.mRFID = (TextView) convertView.findViewById(R.id.dialog_rfid_scan_rfid);
+            holder.mLine = (LinearLayout) convertView.findViewById(R.id.dialog_rfid_scan_line);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.mCheckBox.setChecked(mList.get(position).isCheck());
+        holder.mCheckBox.setClickable(false);
         holder.mRFID.setText(mList.get(position).getRifd());
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //mList.get(position).setCheck(isChecked);
+            }
+        });
+
+        holder.mLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.mCheckBox.isChecked()) {
+                    //holder.mCheckBox.setChecked(false);
+                } else {
+                    //holder.mCheckBox.setChecked(true);
+                }
+            }
+        });
         return convertView;
 
     }
 }
- class ViewHolder{
-     CheckBox mCheckBox;
-     TextView mRFID;
 
- }
+class ViewHolder {
+    LinearLayout mLine;
+    CheckBox mCheckBox;
+    TextView mRFID;
+
+}

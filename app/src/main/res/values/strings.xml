@@ -36,6 +36,7 @@
     <string name="assert_stocktaking">资产盘点</string>
     <string name="hint_assert_department">科技部</string>
     <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
     <string name="scan">扫描</string>
     <string name="assert_number">资产编号</string>
     <string name="detail_info">详情</string>
@@ -45,4 +46,6 @@
     <string name="stop_scan">停止扫描</string>
     <string name="start_scan">开始扫描</string>
     <string name="new_asert_info">新数据</string>
+    <string name="not_inventory">未盘点</string>
+    <string name="have_inventory">已盘点</string>
 </resources>

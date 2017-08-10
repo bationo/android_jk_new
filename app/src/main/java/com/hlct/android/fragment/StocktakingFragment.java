@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class StocktakingFragment extends Fragment {
 
-    public static String STOCKTAKING_FRAGMENT_TAG = "StocktakingFragment";
+    private static String TAG = "StocktakingFragment";
     private Context mContext;
     private View mRootView;
     private RecyclerView mRecyclerView;
@@ -57,7 +58,6 @@ public class StocktakingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mContext = getActivity();
-        initData();
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_recycler);
         mRecyclerAdapter = new PlanRecyclerAdapter(mContext,mList);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
@@ -88,6 +88,13 @@ public class StocktakingFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+        Log.e(TAG,"onResume");
+    }
+
+    @Override
     public void onStop() {
         //EventBus.getDefault().unregister(this);
         super.onStop();
@@ -104,9 +111,12 @@ public class StocktakingFragment extends Fragment {
         User user = daoSession.getUserDao().queryBuilder()
                 .where(UserDao.Properties.Id.eq(userID))
                 .unique();
-        mList = daoSession.getPlanBeanDao().queryBuilder()
+        List<PlanBean> list = daoSession.getPlanBeanDao().queryBuilder()
                 .where(PlanBeanDao.Properties.InventoryPerson.eq(user.getName()))
                 .list();
+        mList.clear();
+        mList.addAll(list);
+        mRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Nullable

@@ -35,12 +35,13 @@ import java.util.List;
 public class StocktakingDetailFragment extends Fragment {
 
     // 注意，tag用于 打印LOG信息时最多 23个字符
-    private static String TAG = "StocktakingDetailFragment";
+    private static String TAG = "StocktakingDtFragment";
     private Context mContext;
     private View mRootView;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DetailRecyclerAdapter mRecyclerAdapter;
+    private String mStatus;
 
     /*****data*****/
     private List<Detail> mList = new ArrayList<>();
@@ -58,7 +59,7 @@ public class StocktakingDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mContext = getActivity();
-
+        mStatus = getArguments().getString("status");
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_detail_recycler);
         mRecyclerAdapter = new DetailRecyclerAdapter(mContext, mList);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
@@ -91,14 +92,14 @@ public class StocktakingDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("DTFragment------->", "onPause方法调用");
+        Log.e(TAG, "onPause方法调用");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         initData();
-        Log.e("DTFragment------->", "onResume方法调用");
+        Log.e(TAG, "onResume方法调用");
     }
 
     @Override
@@ -113,20 +114,16 @@ public class StocktakingDetailFragment extends Fragment {
     private void initData() {
         //TODO 加载数据
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
-        Log.e("DTFragment------->", "planid ====" + planId);
+        /*Log.e("DTFragment------->", "planid ====" + planId);
+        Log.e("DTFragment------->", "status ====" + mStatus);*/
         List<Detail> list = daoSession.getDetailDao().queryBuilder()
                 .where(DetailDao.Properties.PlanId.eq(planId))
-                .where(DetailDao.Properties.InventoryState.eq("未盘点"))
+                .where(DetailDao.Properties.InventoryState.eq(mStatus))
                 .orderAsc(DetailDao.Properties.DetailId)
                 .list();
         mList.clear();
         mList.addAll(list);
         mRecyclerAdapter.notifyDataSetChanged();
-        //TODO 根据 是否盘点| planId  条件查询到结果
-       /* mList = daoSession.getDetailDao().queryBuilder()
-                .where(DetailDao.Properties.InventoryState.eq("未盘点"))
-                .orderAsc(DetailDao.Properties.DetailId)
-                .list();*/
     }
 
     @Nullable

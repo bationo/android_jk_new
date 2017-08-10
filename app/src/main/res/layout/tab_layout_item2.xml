@@ -4,26 +4,33 @@
               android:layout_width="match_parent"
               android:layout_height="48dp">
     <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
+    <TextView
         android:id="@+id/tab_layout_item_tv2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="已盘点"
+        android:text="@string/have_inventory"
         android:layout_gravity="center"
         android:gravity="center"
         android:paddingBottom="2dp"
-        android:paddingLeft="48dp"
-        android:paddingRight="4dp"
         android:textSize="20sp"/>
     <TextView
         android:id="@+id/tab_layout_item_count2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/hint_111"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:gravity="center"
         android:textColorHint="@color/colorWhite"
         android:textColor="@color/colorWhite"
         android:layout_gravity="center_vertical"
         android:background="@drawable/tab_count_view"
         />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
 </LinearLayout>

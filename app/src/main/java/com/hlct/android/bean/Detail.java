@@ -93,7 +93,6 @@ public class Detail implements Serializable {
         this.detailId = detailId;
     }
 
-
     public Long getPlanId() {
         return planId;
     }

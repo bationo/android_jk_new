@@ -60,13 +60,11 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 .where(DetailDao.Properties.PlanId.eq(mList.get(position).getPlanId()))
                 .list();
         holder.mTVCount.setText(details.size() + "");
-        int counted = 0;
-        for (Detail detail : details) {
-            if (detail.getInventoryState().equals("已盘点")) {
-                counted += 1;
-            }
-        }
-        holder.mTVCounted.setText(counted + "");
+        List<Detail> detailList = daoSession.getDetailDao().queryBuilder()
+                .where(DetailDao.Properties.PlanId.eq(mList.get(position).getPlanId()))
+                .where(DetailDao.Properties.InventoryState.eq("已盘点"))
+                .list();
+        holder.mTVCounted.setText(detailList.size() + "");
         holder.mTVStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

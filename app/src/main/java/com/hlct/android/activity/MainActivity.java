@@ -107,6 +107,12 @@ public class MainActivity extends AppCompatActivity
         mTransaction.commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG,"onResume");
+    }
+
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

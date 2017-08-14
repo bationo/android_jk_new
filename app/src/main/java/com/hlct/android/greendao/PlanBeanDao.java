@@ -31,8 +31,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
         public final static Property PlanTime = new Property(4, String.class, "planTime", false, "PLAN_TIME");
         public final static Property ConfirmPerson = new Property(5, String.class, "confirmPerson", false, "CONFIRM_PERSON");
         public final static Property ConfirmTime = new Property(6, String.class, "confirmTime", false, "CONFIRM_TIME");
-        public final static Property DepartmentId = new Property(7, Long.class, "departmentId", false, "DEPARTMENT_ID");
-        public final static Property Remark = new Property(8, String.class, "remark", false, "REMARK");
+        public final static Property Remark = new Property(7, String.class, "remark", false, "REMARK");
     }
 
 
@@ -55,8 +54,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
                 "\"PLAN_TIME\" TEXT," + // 4: planTime
                 "\"CONFIRM_PERSON\" TEXT," + // 5: confirmPerson
                 "\"CONFIRM_TIME\" TEXT," + // 6: confirmTime
-                "\"DEPARTMENT_ID\" INTEGER," + // 7: departmentId
-                "\"REMARK\" TEXT);"); // 8: remark
+                "\"REMARK\" TEXT);"); // 7: remark
     }
 
     /** Drops the underlying database table. */
@@ -104,14 +102,9 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
             stmt.bindString(7, confirmTime);
         }
  
-        Long departmentId = entity.getDepartmentId();
-        if (departmentId != null) {
-            stmt.bindLong(8, departmentId);
-        }
- 
         String remark = entity.getRemark();
         if (remark != null) {
-            stmt.bindString(9, remark);
+            stmt.bindString(8, remark);
         }
     }
 
@@ -154,14 +147,9 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
             stmt.bindString(7, confirmTime);
         }
  
-        Long departmentId = entity.getDepartmentId();
-        if (departmentId != null) {
-            stmt.bindLong(8, departmentId);
-        }
- 
         String remark = entity.getRemark();
         if (remark != null) {
-            stmt.bindString(9, remark);
+            stmt.bindString(8, remark);
         }
     }
 
@@ -180,8 +168,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // planTime
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // confirmPerson
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // confirmTime
-            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // departmentId
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // remark
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // remark
         );
         return entity;
     }
@@ -195,8 +182,7 @@ public class PlanBeanDao extends AbstractDao<PlanBean, Long> {
         entity.setPlanTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setConfirmPerson(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setConfirmTime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setDepartmentId(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
-        entity.setRemark(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setRemark(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     @Override

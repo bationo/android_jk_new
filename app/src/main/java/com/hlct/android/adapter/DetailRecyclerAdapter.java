@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.hlct.android.R;
 import com.hlct.android.activity.StocktakingDetailActivity;
 import com.hlct.android.bean.AssetBean;
+import com.hlct.android.bean.BankInfo;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.MessageEvent;
 import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.AssetBeanDao;
+import com.hlct.android.greendao.BankInfoDao;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.UserDao;
 
@@ -60,12 +62,15 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailViewHolder
         User user = daoSession.getUserDao().queryBuilder()
                 .where(UserDao.Properties.Id.eq(mList.get(position).getUserId()))
                 .unique();
+        BankInfo bankInfo = daoSession.getBankInfoDao().queryBuilder()
+                .where(BankInfoDao.Properties.Id.eq(user.getBankId()))
+                .unique();
         holder.mTVAssertName.setText(assetBean.getFacilityName());
         holder.mTVNumber.setText(assetBean.getFacilityNumber());
         holder.mTVAssertRFID.setText(assetBean.getRfid());
         holder.mTVAssertUser.setText(user.getName());
         holder.mTVAssertType.setText(assetBean.getFacilityType());
-        holder.mTVAssertUnit.setText(user.getBankName());
+        holder.mTVAssertUnit.setText(bankInfo.getBankName());
         holder.mTVAssertDepartment.setText(user.getDepartmentName());
 
     }

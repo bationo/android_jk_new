@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hlct.android.activity.StocktakingPlanActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="25dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/activity_stocktaking_plan_appbar_layout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
-        android:elevation="2dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        >
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp"
+            android:minHeight="56dp"
+            app:layout_scrollFlags="scroll"
             >
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/activity_stocktaking_plan_toolbar"
                 android:layout_width="match_parent"
@@ -35,9 +26,8 @@
                 android:background="@color/colorPrimary"
                 android:elevation="4dp"
                 android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_collapseMode="pin"
                 >
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -66,17 +56,15 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="20sp"/>
                 </LinearLayout>
-
-
             </android.support.v7.widget.Toolbar>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
                 android:background="@color/colorWhite"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:layout_marginTop="56dp"
+                android:padding="8dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,18 +82,24 @@
                     android:paddingStart="8dp"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
-
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:layout_marginTop="92dp"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                >
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="1"
                     android:gravity="end"
-                    android:paddingStart="8dp"
                     android:text="@string/stocktaking_data"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
-
                 <TextView
                     android:id="@+id/activity_stocktaking_plan_tv_date"
                     android:layout_width="wrap_content"
@@ -115,18 +109,15 @@
                     android:paddingStart="8dp"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
-
-
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="92dp"
                 android:background="@color/colorWhite"
+                android:layout_marginTop="124dp"
                 android:orientation="horizontal"
-                android:padding="8dp">
-
+                android:padding="8dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -143,27 +134,6 @@
                     android:paddingStart="8dp"
                     android:textSize="18sp"
                     tools:ignore="RtlSymmetry"/>
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/assert_user_department"
-                    android:textSize="18sp"
-                    tools:ignore="RtlSymmetry"/>
-
-                <TextView
-                    android:id="@+id/activity_stocktaking_plan_tv_department"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/hint_assert_department"
-                    android:paddingStart="8dp"
-                    android:textSize="18sp"
-                    tools:ignore="RtlSymmetry"/>
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -173,11 +143,8 @@
             android:layout_height="48dp"
             android:layout_gravity="end"
             android:background="@color/colorWhite"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:tabIndicatorColor="#f92e2e"
-            app:tabMode="fixed"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            app:tabMode="fixed">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_item1"
@@ -195,23 +162,19 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
+        android:layout_height="match_parent"
         android:weightSum="1"
+        android:background="@color/colorWhite"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_stocktaking_plan_appbar_layout"
-        app:layout_constraintVertical_bias="0.0">
+        android:orientation="vertical">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/activity_stocktaking_plan_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="635dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="8dp"
             >
         </android.support.v4.view.ViewPager>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

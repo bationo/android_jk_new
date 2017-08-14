@@ -5,6 +5,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.util.Date;
+
 @Entity
 public class AssetBean{
 
@@ -44,9 +45,7 @@ public class AssetBean{
     private Long userId;				//使用人id
 
 
-	@Generated(hash = 596597220)
-	public AssetBean() {
-	}
+
 
 	@Generated(hash = 866593665)
 	public AssetBean(Long id, Long supplierId, String facilityName,
@@ -72,6 +71,12 @@ public class AssetBean{
 					this.costing = costing;
 					this.userId = userId;
 	}
+	@Generated(hash = 596597220)
+	public AssetBean() {
+	}
+
+	
+
 
 	public Long getId() {
 		return id;

@@ -112,7 +112,7 @@ public class StocktakingDetailFragment extends Fragment {
      * 加载数据填在recyclerView中。
      */
     private void initData() {
-        //TODO 加载数据
+        // 加载数据
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
         /*Log.e("DTFragment------->", "planid ====" + planId);
         Log.e("DTFragment------->", "status ====" + mStatus);*/

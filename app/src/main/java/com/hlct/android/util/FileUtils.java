@@ -1,10 +1,16 @@
 package com.hlct.android.util;
 
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +34,21 @@ public class FileUtils {
      */
     private static boolean isFileExists(final File file) {
         return file != null && file.exists();
+    }
+
+    /**
+     * 根据文件的路径判断文件是否存在
+     *
+     * @param filePath 文件路径
+     * @return 返回true表示文件存在，false表示文件不存在
+     */
+    public static boolean isFileExists(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -74,6 +95,7 @@ public class FileUtils {
         try {
             FileOutputStream fos = new FileOutputStream(filePath);
             fos.write(data);
+            fos.flush();
             fos.close();
             return true;
         } catch (Exception e) {
@@ -98,6 +120,36 @@ public class FileUtils {
         }
 
     }
+
+    /**
+     * 将字符串写入文件中。
+     *
+     * @param filePath 文件路径名
+     * @param content  要写入的内容
+     * @param append   true 表示追加内容，false 表示替换内容
+     */
+    public static boolean writeStringToTxt(String filePath, String content, boolean append) {
+        boolean res = true;
+        File file = new File(filePath);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter writer = new FileWriter(file, append);
+            if (append) {
+                content = System.getProperty("line.separator") + content;
+            }
+            writer.write(content);
+            writer.flush();
+            writer.close();
+        } catch (IOException ex) {
+            res = false;
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+
 
     /**
      * 将文本文件中的内容读入到buffer中
@@ -168,5 +220,21 @@ public class FileUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 使文件生成以后立即在电脑中可见
+     *
+     * @param context  传入activity
+     * @param filePath 传入file对象的文件路径
+     */
+    public static void makeFileAvailable(Context context, String filePath) {
+        MediaScannerConnection.scanFile(context, new String[]{filePath}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.d("context", "File scanned" + path);
+                    }
+                });
+
     }
 }

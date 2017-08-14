@@ -15,17 +15,19 @@ import com.google.gson.reflect.TypeToken;
 import com.hlct.android.DataCache.DataCache;
 import com.hlct.android.R;
 import com.hlct.android.bean.AssetBean;
+import com.hlct.android.bean.BankInfo;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.InfoBean;
 import com.hlct.android.bean.PlanBean;
+import com.hlct.android.bean.PropertyPlan;
 import com.hlct.android.bean.User;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.FileUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
 import static com.hlct.android.constant.DatabaseConstant.FILE_PATH;
@@ -89,25 +91,29 @@ public class WelcomeActivity extends AppCompatActivity {
             boolean flag = false;
             try {
                 //解析文件
-                //str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
-//                ArrayList<User> users = gson.fromJson(str, new TypeToken<ArrayList<User>>() {
+                str = FileUtils.readFile(FILE_PATH + date + "WDRW.txt");
+                PropertyPlan propertyPlan = gson.fromJson(str,new TypeToken<PropertyPlan>(){}.getType());
+                List<PlanBean> planBeanArrayList = propertyPlan.getPlanList();
+                List<User> userArrayList = propertyPlan.getUser();
+                List<Detail> detailArrayList = propertyPlan.getDetail();
+                List<AssetBean> assetBeanArrayList = propertyPlan.getAsset();
+                List<InfoBean> infoBeanArrayList = propertyPlan.getInfo();
+                List<BankInfo> bankInfoList = propertyPlan.getBankInfo();
+//                details = FileUtils.readFile(FILE_PATH + "detail.txt");
+//                plans = FileUtils.readFile(FILE_PATH + "plan.txt");
+//                departments = FileUtils.readFile(FILE_PATH + "department.txt");
+//                userList = FileUtils.readFile(FILE_PATH + "user.txt");
+//                assets = FileUtils.readFile(FILE_PATH + "assets.txt");
+//                ArrayList<Detail> detailArrayList = gson.fromJson(details, new TypeToken<ArrayList<Detail>>() {
 //                }.getType());
-
-                details = FileUtils.readFile(FILE_PATH + "detail.txt");
-                plans = FileUtils.readFile(FILE_PATH + "plan.txt");
-                departments = FileUtils.readFile(FILE_PATH + "department.txt");
-                userList = FileUtils.readFile(FILE_PATH + "user.txt");
-                assets = FileUtils.readFile(FILE_PATH + "assets.txt");
-                ArrayList<Detail> detailArrayList = gson.fromJson(details, new TypeToken<ArrayList<Detail>>() {
-                }.getType());
-                ArrayList<PlanBean> planBeanArrayList = gson.fromJson(plans, new TypeToken<ArrayList<PlanBean>>() {
-                }.getType());
-                ArrayList<User> userArrayList = gson.fromJson(userList,
-                        new TypeToken<ArrayList<User>>(){}.getType());
-                ArrayList<AssetBean> assetBeanArrayList = gson.fromJson(assets,
-                        new TypeToken<ArrayList<AssetBean>>(){}.getType());
-                ArrayList<InfoBean> infoBeanArrayList = gson.fromJson(departments,
-                        new TypeToken<ArrayList<InfoBean>>(){}.getType());
+//                ArrayList<PlanBean> planBeanArrayList = gson.fromJson(plans, new TypeToken<ArrayList<PlanBean>>() {
+//                }.getType());
+//                ArrayList<User> userArrayList = gson.fromJson(userList,
+//                        new TypeToken<ArrayList<User>>(){}.getType());
+//                ArrayList<AssetBean> assetBeanArrayList = gson.fromJson(assets,
+//                        new TypeToken<ArrayList<AssetBean>>(){}.getType());
+//                ArrayList<InfoBean> infoBeanArrayList = gson.fromJson(departments,
+//                        new TypeToken<ArrayList<InfoBean>>(){}.getType());
 
                 Log.e("开始时间---->", new Date().toString());
                 //清空当前数据库
@@ -123,11 +129,15 @@ public class WelcomeActivity extends AppCompatActivity {
                 daoSession.getDetailDao().insertOrReplaceInTx(detailArrayList);
                 daoSession.getAssetBeanDao().insertOrReplaceInTx(assetBeanArrayList);
                 daoSession.getInfoBeanDao().insertOrReplaceInTx(infoBeanArrayList);
+                daoSession.getBankInfoDao().insertOrReplaceInTx(bankInfoList);
 
                 Log.e("结束时间---->", new Date().toString());
                 Log.e("插入数据的条数", daoSession.getDetailDao().loadAll().size() + "");
                 Log.e("插入数据的条数", daoSession.getPlanBeanDao().loadAll().size() + "");
                 Log.e("插入数据的条数", daoSession.getUserDao().loadAll().size() + "");
+                Log.e("插入数据的条数", daoSession.getAssetBeanDao().loadAll().size() + "");
+                Log.e("插入数据的条数", daoSession.getInfoBeanDao().loadAll().size() + "");
+                Log.e("插入数据的条数", daoSession.getBankInfoDao().loadAll().size() + "");
                 flag = true;
             } catch (IOException e) {
                 flag = false;

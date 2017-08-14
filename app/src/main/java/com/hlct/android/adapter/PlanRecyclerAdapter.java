@@ -3,13 +3,13 @@ package com.hlct.android.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hlct.android.R;
+import com.hlct.android.activity.MainActivity;
 import com.hlct.android.activity.StocktakingPlanActivity;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.PlanBean;
@@ -46,9 +46,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 EventBus.getDefault().postSticky(mList.get(position).getPlanId());
-                Log.e("plan id ------------->", mList.get(position).getPlanId() + "");
                 mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
@@ -69,7 +67,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View v) {
                 //TODO 点击事件：开始盘点
-                EventBus.getDefault().post(mList.get(position).getPlanId());
+                EventBus.getDefault().postSticky(mList.get(position).getPlanId());
                 mContext.startActivity(new Intent(mContext.getApplicationContext(), StocktakingPlanActivity.class));
             }
         });
@@ -77,6 +75,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View v) {
                 //TODO 点击事件：上传数据
+                ((MainActivity)mContext).commitData();
             }
         });
     }

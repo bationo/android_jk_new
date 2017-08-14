@@ -2,8 +2,8 @@ package com.hlct.android.bean;
 
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 ;
 
@@ -28,14 +28,13 @@ public class PlanBean{
 
     private String confirmTime;		//审核时间
 
-    private Long departmentId;		//所要盘点的部门
-
     private String remark;			//备注
 
-	@Generated(hash = 1948500185)
+
+	@Generated(hash = 1187454677)
 	public PlanBean(Long planId, String planNumber, Long personID,
 									String inventoryPerson, String planTime, String confirmPerson,
-									String confirmTime, Long departmentId, String remark) {
+									String confirmTime, String remark) {
 					this.planId = planId;
 					this.planNumber = planNumber;
 					this.personID = personID;
@@ -43,12 +42,12 @@ public class PlanBean{
 					this.planTime = planTime;
 					this.confirmPerson = confirmPerson;
 					this.confirmTime = confirmTime;
-					this.departmentId = departmentId;
 					this.remark = remark;
 	}
 	@Generated(hash = 1985632014)
 	public PlanBean() {
 	}
+
 
 	public Long getPlanId() {
 		return planId;
@@ -95,12 +94,6 @@ public class PlanBean{
 	}
 	public void setConfirmTime(String confirmTime) {
 		this.confirmTime = confirmTime;
-	}
-	public Long getDepartmentId() {
-		return departmentId;
-	}
-	public void setDepartmentId(Long departmentId) {
-		this.departmentId = departmentId;
 	}
 	public String getRemark() {
 		return remark;

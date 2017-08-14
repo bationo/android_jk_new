@@ -65,10 +65,15 @@ public class Detail implements Serializable {
      */
     private String remark;
 
-    @Generated(hash = 1874367633)
+    private Long departmentID;
+
+
+
+    @Generated(hash = 1919006003)
     public Detail(Long detailId, Long planId, String inventroryName,
-                  String inventoryState, String inventoryTime, Long propertyId,
-                  String propertyName, String propertyRfid, Long userId, String remark) {
+            String inventoryState, String inventoryTime, Long propertyId,
+            String propertyName, String propertyRfid, Long userId, String remark,
+            Long departmentID) {
         this.detailId = detailId;
         this.planId = planId;
         this.inventroryName = inventroryName;
@@ -79,11 +84,14 @@ public class Detail implements Serializable {
         this.propertyRfid = propertyRfid;
         this.userId = userId;
         this.remark = remark;
+        this.departmentID = departmentID;
     }
 
     @Generated(hash = 1665969126)
     public Detail() {
     }
+
+
 
     public Long getDetailId() {
         return detailId;
@@ -163,6 +171,14 @@ public class Detail implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getDepartmentID() {
+        return departmentID;
+    }
+
+    public void setDepartmentID(Long departmentID) {
+        this.departmentID = departmentID;
     }
 
 }

@@ -19,13 +19,11 @@ import android.widget.TextView;
 import com.hlct.android.R;
 import com.hlct.android.adapter.FragmentPagerAdapterWithTab;
 import com.hlct.android.bean.Detail;
-import com.hlct.android.bean.InfoBean;
 import com.hlct.android.bean.PlanBean;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.fragment.StocktakingDetailFragment;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.DetailDao;
-import com.hlct.android.greendao.InfoBeanDao;
 import com.hlct.android.greendao.PlanBeanDao;
 import com.hlct.android.util.RfidScanDialog;
 
@@ -49,7 +47,6 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
     private TextView mTVDate;
     private TextView mTVPerson;
     private TextView mTVPlanNumber;
-    private TextView mTVDepartment;
     private ArrayList<Fragment> mFragments = new ArrayList<>();
 
     private TabItem tabItem1;
@@ -63,7 +60,6 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
     /*****************data*********************/
     private long id;   //计划id号
     private ArrayList<String> mTabs = new ArrayList<>();
-    private String[] tabs = new String[]{"未盘点", "已盘点"};
     private ArrayList<PlanBean> mList = new ArrayList<>();
     /*****************misc*********************/
     private FragmentPagerAdapterWithTab mFragmentPagerAdapter;
@@ -80,7 +76,7 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 点击返回事件
+                finish();
             }
         });
         /***********fragment view pager***************/
@@ -182,13 +178,11 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+
         Log.e(STOCKTAKING_PLAN_ACTIVITY_TAG, "onResume()");
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
         PlanBean planBean = daoSession.getPlanBeanDao().queryBuilder()
                 .where(PlanBeanDao.Properties.PlanId.eq(id))
-                .unique();
-        InfoBean department = daoSession.getInfoBeanDao().queryBuilder()
-                .where(InfoBeanDao.Properties.DepartmentId.eq(planBean.getDepartmentId()))
                 .unique();
         List<Detail> details = daoSession.getDetailDao().queryBuilder()
                 .where(DetailDao.Properties.PlanId.eq(id))
@@ -201,7 +195,6 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mTVDate.setText(planBean.getPlanTime());
         mTVPerson.setText(planBean.getInventoryPerson());
         mTVPlanNumber.setText(planBean.getPlanNumber());
-        mTVDepartment.setText(department.getDepartmentName());
         tabItemCount1.setText(details.size() + "");
         tabItemCount2.setText(detailList.size() + "");
     }
@@ -241,7 +234,6 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mTVDate = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_date);
         mTVPerson = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_person);
         mTVPlanNumber = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_number);
-        mTVDepartment = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_department);
         mTVInvenory = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_start_inventory);
         mTVInvenory.setOnClickListener(this);
 

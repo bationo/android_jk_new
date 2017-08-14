@@ -34,6 +34,7 @@ public class DetailDao extends AbstractDao<Detail, Long> {
         public final static Property PropertyRfid = new Property(7, String.class, "propertyRfid", false, "PROPERTY_RFID");
         public final static Property UserId = new Property(8, Long.class, "userId", false, "USER_ID");
         public final static Property Remark = new Property(9, String.class, "remark", false, "REMARK");
+        public final static Property DepartmentID = new Property(10, Long.class, "departmentID", false, "DEPARTMENT_ID");
     }
 
 
@@ -58,7 +59,8 @@ public class DetailDao extends AbstractDao<Detail, Long> {
                 "\"PROPERTY_NAME\" TEXT," + // 6: propertyName
                 "\"PROPERTY_RFID\" TEXT," + // 7: propertyRfid
                 "\"USER_ID\" INTEGER," + // 8: userId
-                "\"REMARK\" TEXT);"); // 9: remark
+                "\"REMARK\" TEXT," + // 9: remark
+                "\"DEPARTMENT_ID\" INTEGER);"); // 10: departmentID
     }
 
     /** Drops the underlying database table. */
@@ -120,6 +122,11 @@ public class DetailDao extends AbstractDao<Detail, Long> {
         if (remark != null) {
             stmt.bindString(10, remark);
         }
+ 
+        Long departmentID = entity.getDepartmentID();
+        if (departmentID != null) {
+            stmt.bindLong(11, departmentID);
+        }
     }
 
     @Override
@@ -175,6 +182,11 @@ public class DetailDao extends AbstractDao<Detail, Long> {
         if (remark != null) {
             stmt.bindString(10, remark);
         }
+ 
+        Long departmentID = entity.getDepartmentID();
+        if (departmentID != null) {
+            stmt.bindLong(11, departmentID);
+        }
     }
 
     @Override
@@ -194,7 +206,8 @@ public class DetailDao extends AbstractDao<Detail, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // propertyName
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // propertyRfid
             cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // userId
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // remark
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // remark
+            cursor.isNull(offset + 10) ? null : cursor.getLong(offset + 10) // departmentID
         );
         return entity;
     }
@@ -211,6 +224,7 @@ public class DetailDao extends AbstractDao<Detail, Long> {
         entity.setPropertyRfid(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setUserId(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
         entity.setRemark(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setDepartmentID(cursor.isNull(offset + 10) ? null : cursor.getLong(offset + 10));
      }
     
     @Override

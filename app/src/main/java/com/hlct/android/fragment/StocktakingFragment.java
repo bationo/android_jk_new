@@ -105,7 +105,7 @@ public class StocktakingFragment extends Fragment {
      *
      */
     private void initData() {
-        //TODO 加载数据
+        // 加载数据
         userID = new SharedPreferencesUtils(mContext).getLoginUserID();
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
         User user = daoSession.getUserDao().queryBuilder()

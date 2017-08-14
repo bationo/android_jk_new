@@ -1,6 +1,7 @@
 package com.hlct.android.activity;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,15 +13,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hlct.android.R;
+import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.fragment.StocktakingDetailFragment;
@@ -28,13 +33,16 @@ import com.hlct.android.fragment.StocktakingFragment;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.UserDao;
 import com.hlct.android.util.ActivityUtils;
+import com.hlct.android.util.FileUtils;
 import com.hlct.android.util.SharedPreferencesUtils;
 import com.hlct.android.util.ToastUtil;
+
+import java.util.List;
 
 import static com.hlct.android.R.id.toolbar;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static String TAG = "MainActivity";
     private static String STOCKTAKING_FRAGMENT_TAG = "stocktakingFragment";
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     StocktakingFragment stocktakingFragment;
     StocktakingDetailFragment zFragment;
     private long userID;      //登陆的user 的id
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +74,7 @@ public class MainActivity extends AppCompatActivity
         mToolBar = (Toolbar) findViewById(toolbar);
         setSupportActionBar(mToolBar);
         initView();
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 悬浮按钮点击事件
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
         //侧滑导航栏 item的点击事件
         navigationView.setNavigationItemSelectedListener(this);
         //fragment 管理
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         mManager = getSupportFragmentManager();
         FragmentTransaction mTransaction = mManager.beginTransaction();
         stocktakingFragment = new StocktakingFragment();
-        mTransaction.add(R.id.activity_main_linear_container,stocktakingFragment,STOCKTAKING_FRAGMENT_TAG);
+        mTransaction.add(R.id.activity_main_linear_container, stocktakingFragment, STOCKTAKING_FRAGMENT_TAG);
         /*zFragment = new StocktakingDetailFragment();
         mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");*/
         mTransaction.commit();
@@ -110,9 +112,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG,"onResume");
+        Log.e(TAG, "onResume");
     }
 
+    /**
+     * 初始化view
+     */
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -122,6 +127,14 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(outMetrics);
+        Log.e(TAG ,"测量到屏幕宽度是"+outMetrics.widthPixels);
+        Point point = new Point();
+        windowManager.getDefaultDisplay().getSize(point);
+        Log.e(TAG ,"测量到屏幕宽度是"+point.x);
+        getResources().getDimension(R.dimen.nav_width);
         mTVNavHeaderName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_name);
         mTVNavHeaderDepartment = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_department);
     }
@@ -144,11 +157,12 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_stocktaking) {
             //TODO 重复点击报错
-            FragmentTransaction mTransaction = mManager.beginTransaction();
-            mTransaction.show(stocktakingFragment);
-            mTransaction.hide(zFragment);
-            mTransaction.commit();
-
+            if (!stocktakingFragment.isVisible()) {
+                FragmentTransaction mTransaction = mManager.beginTransaction();
+                mTransaction.show(stocktakingFragment);
+                mTransaction.hide(zFragment);
+                mTransaction.commit();
+            }
         } else if (id == R.id.nav_gallery) {
             /*FragmentTransaction mTransaction = mManager.beginTransaction();
             mTransaction.show(zFragment);
@@ -195,8 +209,8 @@ public class MainActivity extends AppCompatActivity
             Log.d("onKeyDown", "" + keyCode);
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
                 //showSnackbar(getWindow().getDecorView(), "再按一次退出");
-                new ToastUtil(mContext,"再按一次退出",1500)
-                        .setGravity(Gravity.CENTER,0,200)
+                new ToastUtil(mContext, "再按一次退出", 1500)
+                        .setGravity(Gravity.CENTER, 0, 200)
                         .show();
                 mExitTime = System.currentTimeMillis();
             } else {
@@ -205,5 +219,48 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                commitData();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 生成盘点文件
+     */
+    public void commitData() {
+        //TODO 生成文件
+        Snackbar.make(fab, "是否确定生成数据文件", Snackbar.LENGTH_LONG)
+                .setAction("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+                        List<Detail> details = daoSession.getDetailDao().loadAll();
+                        Gson gson = new Gson();
+                        String string = gson.toJson(details);
+                        Log.e(TAG, string);
+
+                        if (FileUtils.writeStringToTxt(DatabaseConstant.FILE_PATH + "OUT_DATA.txt", string, false)) {
+                            new ToastUtil(mContext, "文件生成成功", 2000)
+                                    .setGravity(Gravity.CENTER, 0, 200)
+                                    .show();
+                            FileUtils.makeFileAvailable(mContext, DatabaseConstant.FILE_PATH + "OUT_DATA.txt");
+                        } else {
+                            new ToastUtil(mContext, "文件生成失败", 2000)
+                                    .setGravity(Gravity.CENTER, 0, 200)
+                                    .show();
+                        }
+
+                    }
+                })
+                .show();
     }
 }

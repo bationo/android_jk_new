@@ -9,15 +9,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.hlct.android.R;
 import com.hlct.android.bean.ResultInfo;
 import com.hlct.android.bean.User;
+import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.UserDao;
 import com.hlct.android.http.APIService;
@@ -25,6 +28,9 @@ import com.hlct.android.util.ActivityUtils;
 import com.hlct.android.util.IntenetUtils;
 import com.hlct.android.util.SecurityUtils;
 import com.hlct.android.util.SharedPreferencesUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,16 +68,26 @@ public class LoginActivity extends AppCompatActivity {
     //等待的Dialog
     private MaterialDialog materialDialog = null;
 
+    private List<String> mList = new ArrayList<>();//数据库中的user 登陆名
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mContext = LoginActivity.this;
+        initData();
         ActivityUtils.getInstance().addActivity(this);
+        ShimmerFrameLayout container =
+                (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        container.startShimmerAnimation();
         //初始化数据库
         daoSession = setupDatabase(this);
         // Set up the login form.
         mLoginName = (AutoCompleteTextView) findViewById(R.id.loginName_tv_login);
+
+        adapter = new ArrayAdapter<String>(mContext ,android.R.layout.simple_dropdown_item_1line, mList);
+        mLoginName.setAdapter(adapter);
+
         mPasswordView = (EditText) findViewById(R.id.password_et_login);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -259,6 +275,25 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             super.onPostExecute(s);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /**
+     * 初始化数据
+     * 登陆名list
+     */
+    private void initData() {
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        List<User> users = daoSession.getUserDao().loadAll();
+        for (User user : users) {
+            if (!mList.contains(user.getLoginName())){
+                mList.add(user.getLoginName());
+            }
         }
     }
 

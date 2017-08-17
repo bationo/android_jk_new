@@ -24,15 +24,6 @@
     <string name="stocktaking_plan">盘点计划</string>
     <string name="plan_number">计划编号:</string>
     <string name="serial_number">编号：</string>
-    <string name="assert_name">资产名称：</string>
-    <string name="hint_assert_name">测试-笔记本</string>
-    <string name="rfid">RFID：</string>
-    <string name="hint_rfid">123456789012345678901234</string>
-    <string name="assert_type">资产类别：</string>
-    <string name="hint_assert_type">电子产品</string>
-    <string name="assert_user">使用人：</string>
-    <string name="assert_user_department">所属部门：</string>
-    <string name="assert_user_unit">所属单位：</string>
     <string name="assert_stocktaking">资产盘点</string>
     <string name="hint_assert_department">科技部</string>
     <string name="cancel">取消</string>
@@ -41,6 +32,7 @@
     <string name="assert_number">资产编号</string>
     <string name="detail_info">详情</string>
     <string name="ex_assert_info">原资产信息</string>
+    <string name="assert_info">资产信息</string>
     <string name="rfid_scan">使用RFID扫描</string>
     <string name="QR_scan">使用二维码扫描</string>
     <string name="stop_scan">停止扫描</string>
@@ -48,4 +40,15 @@
     <string name="new_asert_info">新数据</string>
     <string name="not_inventory">未盘点</string>
     <string name="have_inventory">已盘点</string>
+    <!--         资产详情页面             -->
+    <string name="assert_user">使用人：</string>
+    <string name="assert_name">资产名称：</string>
+    <string name="hint_assert_name">测试-笔记本</string>
+    <string name="rfid">RFID：</string>
+    <string name="hint_rfid">123456789012345678901234</string>
+    <string name="assert_type">资产类别：</string>
+    <string name="hint_assert_type">电子产品</string>
+    <string name="assert_user_unit">所属单位：</string>
+    <string name="assert_user_department">所属部门：</string>
+    <string name="assert_costing">资产成本：</string>
 </resources>

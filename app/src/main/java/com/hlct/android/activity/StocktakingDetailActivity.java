@@ -33,13 +33,13 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     public static final String STOCKTAKING_DETAIL_ACTIVITY_TAG = "StocktakingDetailActivity";
     /**********view*************/
     private TextView mTVCancel;
-    private TextView mTVScan;
     private TextView mTVAssertName;
     private TextView mTVAssertType;
     private TextView mTVAssertRFID;
     private TextView mTVUser;
     private TextView mTVDepartment;
     private TextView mTVUnit;
+    private TextView mTVCosting;
     private BottomSheetDialog mBottomSheetDialog;
     private LinearLayout mLineFRDIScan;
     private LinearLayout mLineQRScan;
@@ -79,7 +79,7 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
         mTVDepartment.setText(user.getDepartmentName());
         mTVUser.setText(user.getName());
         mTVUnit.setText(user.getBankName());
-
+        mTVCosting.setText(assetBean.getCosting());
     }
 
     /**
@@ -88,14 +88,13 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     private void initView() {
         mTVCancel = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_cancel);
         mTVCancel.setOnClickListener(this);
-        mTVScan = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_scan);
-        mTVScan.setOnClickListener(this);
         mTVAssertName = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_name);
         mTVAssertType = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_type);
         mTVAssertRFID = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_rfid);
         mTVUser = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_user);
         mTVDepartment = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_department);
         mTVUnit = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_unit);
+        mTVCosting = (TextView) findViewById(R.id.activity_stocktaking_detail_tv_assert_costing);
 
         View sheetView = LayoutInflater.from(mContext).inflate(R.layout.bottom_sheet_layout,null);
         mBottomSheetDialog = new BottomSheetDialog(mContext);
@@ -109,40 +108,6 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
 
         mDialog = new RfidScanDialog();
 
-    }
-
-    /**
-     * 处理点击事件
-     *
-     * @param v
-     */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.activity_stocktaking_detail_tv_cancel:
-                break;
-            case R.id.activity_stocktaking_detail_tv_scan:
-                mBottomSheetDialog.show();
-                break;
-            case R.id.bottom_sheet_layout_line1:
-                //TODO rfid扫描
-                if(mBottomSheetDialog.isShowing()){
-                    mBottomSheetDialog.dismiss();
-                }
-                mDialog.show(getSupportFragmentManager(),"dialog");
-                break;
-            case R.id.bottom_sheet_layout_line2:
-                //TODO QR扫描
-                new ToastUtil(mContext,"rfid 扫描",2000)
-                        .setGravity(Gravity.CENTER,0,200)
-                        .show();
-                if(mBottomSheetDialog.isShowing()){
-                    mBottomSheetDialog.dismiss();
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -186,4 +151,37 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
         }
     }
 
+    /**
+     * 处理点击事件
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.activity_stocktaking_detail_tv_cancel:
+                break;
+//            case R.id.activity_stocktaking_detail_tv_scan:
+//                mBottomSheetDialog.show();
+//                break;
+            case R.id.bottom_sheet_layout_line1:
+                //TODO rfid扫描
+                if(mBottomSheetDialog.isShowing()){
+                    mBottomSheetDialog.dismiss();
+                }
+                mDialog.show(getSupportFragmentManager(),"dialog");
+                break;
+            case R.id.bottom_sheet_layout_line2:
+                //TODO QR扫描
+                new ToastUtil(mContext,"rfid 扫描",2000)
+                        .setGravity(Gravity.CENTER,0,200)
+                        .show();
+                if(mBottomSheetDialog.isShowing()){
+                    mBottomSheetDialog.dismiss();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

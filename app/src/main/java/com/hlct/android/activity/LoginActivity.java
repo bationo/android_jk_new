@@ -38,6 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static com.hlct.android.DataCache.DataCache.getParseResult;
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
 import static com.hlct.android.constant.DatabaseConstant.setupDatabase;
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView mLoginName;
 
     private EditText mPasswordView;
+    private TextView mTVFingerLogin;
 
     //账号和密码
     private String LOGINNAME;
@@ -109,6 +111,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (flag.equals("file")) {
                     doFileLogin();
                 }
+            }
+        });
+        mTVFingerLogin = (TextView) findViewById(R.id.activity_login_finger_login);
+        mTVFingerLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext,FingerLoginActivity.class);
+                startActivity(i);
             }
         });
     }

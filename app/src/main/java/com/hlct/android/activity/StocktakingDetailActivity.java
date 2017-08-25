@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class StocktakingDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Context mContext;
-    public static final String STOCKTAKING_DETAIL_ACTIVITY_TAG = "StocktakingDetailActivity";
+    private static final String TAG = "StocktakingDetailAc";
     /**********view*************/
     private TextView mTVCancel;
     private TextView mTVAssertName;

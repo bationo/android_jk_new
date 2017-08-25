@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.hlct.android.activity.FingerLoginActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@android:style/TextAppearance.Material.Title"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="@dimen/toolbar_elevation"
+        app:navigationIcon="@mipmap/back_white_64">
+
+        <TextView
+            android:id="@+id/title"
+            style="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingRight="56dp"
+            android:layout_gravity="center_vertical|start"
+            android:text="@string/finger_login" />
+
+    </android.support.v7.widget.Toolbar>
+    <ImageView
+        android:id="@+id/activity_finger_login_image"
+        android:layout_width="256dp"
+        android:layout_height="320dp"
+        android:scaleType="fitXY"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/fingerprint"
+        android:contentDescription="@string/app_name"
+        />
+    <TextView
+        android:id="@+id/activity_finger_login_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击识别后,将手指放在pda的指纹模块上"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:padding="8dp"/>
+    <Button
+        android:id="@+id/activity_finger_login_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_recognition"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"/>
+</LinearLayout>

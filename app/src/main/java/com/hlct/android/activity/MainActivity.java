@@ -1,11 +1,11 @@
 package com.hlct.android.activity;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -13,12 +13,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -28,7 +28,6 @@ import com.hlct.android.R;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
-import com.hlct.android.fragment.StocktakingDetailFragment;
 import com.hlct.android.fragment.StocktakingFragment;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.UserDao;
@@ -62,7 +61,8 @@ public class MainActivity extends AppCompatActivity
     /****************misc********************/
     FragmentManager mManager;
     StocktakingFragment stocktakingFragment;
-    StocktakingDetailFragment zFragment;
+    private Fragment currentFragment;              //标记正在显示的fragment
+
     private long userID;      //登陆的user 的id
 
     @Override
@@ -96,18 +96,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * 将要展示的fragment放在transaction中，以备调用。
-     */
-    private void addFragment() {
-        mManager = getSupportFragmentManager();
-        FragmentTransaction mTransaction = mManager.beginTransaction();
-        stocktakingFragment = new StocktakingFragment();
-        mTransaction.add(R.id.activity_main_linear_container, stocktakingFragment, STOCKTAKING_FRAGMENT_TAG);
-        /*zFragment = new StocktakingDetailFragment();
-        mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");*/
-        mTransaction.commit();
-    }
 
     @Override
     protected void onResume() {
@@ -127,16 +115,13 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(outMetrics);
-        Log.e(TAG ,"测量到屏幕宽度是"+outMetrics.widthPixels);
-        Point point = new Point();
-        windowManager.getDefaultDisplay().getSize(point);
-        Log.e(TAG ,"测量到屏幕宽度是"+point.x);
-        getResources().getDimension(R.dimen.nav_width);
         mTVNavHeaderName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_name);
         mTVNavHeaderDepartment = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_tv_department);
+        WindowManager windowManager = this.getWindowManager();
+        int w = windowManager.getDefaultDisplay().getWidth();
+        ViewGroup.LayoutParams para = navigationView.getLayoutParams();//获取drawerlayout的布局
+        para.width = (w / 4) * 3;//修改宽度
+        navigationView.setLayoutParams(para); //设置修改后的布局。
     }
 
     @Override
@@ -157,13 +142,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_stocktaking) {
             //TODO 重复点击报错
-            if (!stocktakingFragment.isVisible()) {
-                FragmentTransaction mTransaction = mManager.beginTransaction();
-                mTransaction.show(stocktakingFragment);
-                mTransaction.hide(zFragment);
-                mTransaction.commit();
-            }
-        } else if (id == R.id.nav_gallery) {
+            showFragment(stocktakingFragment);
+        } else if (id == R.id.nav_add_finger) {
             /*FragmentTransaction mTransaction = mManager.beginTransaction();
             mTransaction.show(zFragment);
             mTransaction.hide(stocktakingFragment);
@@ -262,5 +242,37 @@ public class MainActivity extends AppCompatActivity
                     }
                 })
                 .show();
+    }
+
+    /**
+     * 将要展示的fragment放在transaction中，以备调用。
+     */
+    private void addFragment() {
+        mManager = getSupportFragmentManager();
+        FragmentTransaction mTransaction = mManager.beginTransaction();
+        stocktakingFragment = new StocktakingFragment();
+        mTransaction.add(R.id.activity_main_linear_container, stocktakingFragment, STOCKTAKING_FRAGMENT_TAG);
+        /*zFragment = new StocktakingDetailFragment();
+        mTransaction.add(R.id.activity_main_linear_container,zFragment,"zFragment");*/
+        mTransaction.commit();
+        currentFragment = stocktakingFragment;
+    }
+
+    /**
+     * 使用show() hide()切换页面
+     * 显示fragment
+     */
+    private void showFragment(Fragment fg) {
+        FragmentTransaction transaction = mManager.beginTransaction();
+        if (fg != currentFragment) {
+            //如果之前没有添加过
+            transaction
+                    .hide(currentFragment)
+                    .show(fg);
+            //全局变量，记录当前显示的fragment
+            currentFragment = fg;
+            transaction.commit();
+        }
+
     }
 }

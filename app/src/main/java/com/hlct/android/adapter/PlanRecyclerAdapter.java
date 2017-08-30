@@ -26,6 +26,7 @@ import java.util.List;
  */
 
 public class PlanRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
+    private static final String TAG = "PlanRecyclerAdapter";
     private Context mContext;
     private List<PlanBean> mList;
 

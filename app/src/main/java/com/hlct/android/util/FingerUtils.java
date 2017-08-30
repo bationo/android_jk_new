@@ -35,9 +35,7 @@ public class FingerUtils {
      */
     private static FingerHelper mFingerHelper;
     private Handler mHandler = new Handler();      //handle thread message
-
     private AlertDialog mDialog;
-
     private int statues = 0;
     private String connectState = "";
     //IUsbConnState is to receive usb finger connect state

@@ -25,6 +25,7 @@ public class DaoMaster extends AbstractDaoMaster {
         BankInfoDao.createTable(db, ifNotExists);
         DetailDao.createTable(db, ifNotExists);
         InfoBeanDao.createTable(db, ifNotExists);
+        InventorySurplusDao.createTable(db, ifNotExists);
         LoginUserDao.createTable(db, ifNotExists);
         PlanBeanDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
@@ -36,6 +37,7 @@ public class DaoMaster extends AbstractDaoMaster {
         BankInfoDao.dropTable(db, ifExists);
         DetailDao.dropTable(db, ifExists);
         InfoBeanDao.dropTable(db, ifExists);
+        InventorySurplusDao.dropTable(db, ifExists);
         LoginUserDao.dropTable(db, ifExists);
         PlanBeanDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
@@ -61,6 +63,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(BankInfoDao.class);
         registerDaoClass(DetailDao.class);
         registerDaoClass(InfoBeanDao.class);
+        registerDaoClass(InventorySurplusDao.class);
         registerDaoClass(LoginUserDao.class);
         registerDaoClass(PlanBeanDao.class);
         registerDaoClass(UserDao.class);

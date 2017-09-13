@@ -38,9 +38,10 @@
     <string name="QR_scan">使用二维码扫描</string>
     <string name="stop_scan">停止扫描</string>
     <string name="start_scan">开始扫描</string>
-    <string name="new_asert_info">新数据</string>
+    <string name="new_assert_info">新数据</string>
     <string name="not_inventory">未盘点</string>
     <string name="have_inventory">已盘点</string>
+    <string name="inventory_profit">盘盈</string>
     <!--         资产详情页面             -->
     <string name="assert_user">使用人：</string>
     <string name="assert_name">资产名称：</string>

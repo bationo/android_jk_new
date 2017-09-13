@@ -21,10 +21,12 @@ import com.hlct.android.activity.StocktakingPlanActivity;
 import com.hlct.android.adapter.DialogListAdapter;
 import com.hlct.android.bean.AssetBean;
 import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.InventorySurplus;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.AssetBeanDao;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.DetailDao;
+import com.hlct.android.greendao.InventorySurplusDao;
 import com.hlct.android.uhf.RFID;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,7 +43,7 @@ import cn.pda.serialport.Tools;
  */
 
 public class RfidScanDialog extends DialogFragment implements View.OnClickListener {
-    private static  String TAG = "RfidScanDialog";
+    private static final String TAG = "RfidScanDialog";
     private Context mContext;
     private View mRootView;
     private ListView mListView;
@@ -163,26 +165,53 @@ public class RfidScanDialog extends DialogFragment implements View.OnClickListen
                 //TODO 上传数据到数据库
                 DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
                 for (RFID rfid : mList) {
-                    if (rfid.isCheck()) {
-                        //如果rfid 的盘点状态是盘点过了 根据Rfid找到资产id
-                        AssetBean assets = daoSession.getAssetBeanDao().queryBuilder()
-                                .where(AssetBeanDao.Properties.Rfid.eq(rfid.getRifd()))
-                                .unique();
+                    AssetBean assets = daoSession.getAssetBeanDao().queryBuilder()
+                            .where(AssetBeanDao.Properties.Rfid.eq(rfid.getRifd()))
+                            .unique();
+                    if (assets == null) {
+                        //TODO 将rfid数据显示在页面中
+                        Log.d(TAG, "onClick: " + rfid + "没有对应的asserts");
+                    }else{
                         //根据rfid和planid 找到唯一detail
                         Detail detail = daoSession.getDetailDao().queryBuilder()
                                 .where(DetailDao.Properties.PlanId.eq(mPlanID))
                                 .where(DetailDao.Properties.PropertyId.eq(assets.getId()))
                                 .unique();
-                        //将detail 更新为已盘点
-                        detail.setInventoryState("已盘点");
-                        detail.setPropertyRfid(assets.getRfid());
-                        daoSession.getDetailDao().update(detail);
+
+                        //如果根据rfid找的assert 属于盘点计划的一部分
+                        if (detail != null) {
+                            //如果rfid 的盘点状态是盘点过了 根据Rfid找到资产id
+                            if (rfid.isCheck()) {
+                                //将detail 更新为已盘点
+                                detail.setInventoryState("已盘点");
+                                detail.setPropertyRfid(assets.getRfid());
+                                daoSession.getDetailDao().update(detail);
+                            }
+                        //所扫描到的rfid 不属于计划的一部分
+                        } else {
+                            //注意 判断数据库中是否已经存在planID对应的盈余.而不应该直接使用insertOrReplace();
+                            List<InventorySurplus> list = daoSession.getInventorySurplusDao().queryBuilder()
+                                    .where(InventorySurplusDao.Properties.PlanId.eq(mPlanID))
+                                    .list();
+                            boolean isContained = false;
+                            for (InventorySurplus s : list) {
+                                if (assets.getId() == s.getAssertId()) {
+                                    isContained = true;
+                                }
+                            }
+                            if (!isContained) {
+                                InventorySurplus surplus = new InventorySurplus();
+                                surplus.setAssertId(assets.getId());
+                                surplus.setPlanId(mPlanID);
+                                daoSession.getInventorySurplusDao().insert(surplus);
+                            }
+                        }
                     }
                 }
                 mList.clear();
                 mAdapter.notifyDataSetChanged();
                 dismiss();
-                ((StocktakingPlanActivity)mContext).refreshView();
+                ((StocktakingPlanActivity) mContext).refreshView();
                 break;
             default:
                 break;

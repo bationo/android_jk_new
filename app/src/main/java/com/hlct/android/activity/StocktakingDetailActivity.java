@@ -12,13 +12,11 @@ import android.widget.TextView;
 
 import com.hlct.android.R;
 import com.hlct.android.bean.AssetBean;
-import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.MessageEvent;
 import com.hlct.android.bean.User;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.AssetBeanDao;
 import com.hlct.android.greendao.DaoSession;
-import com.hlct.android.greendao.DetailDao;
 import com.hlct.android.greendao.UserDao;
 import com.hlct.android.util.RfidScanDialog;
 import com.hlct.android.util.ToastUtil;
@@ -44,7 +42,7 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     private LinearLayout mLineFRDIScan;
     private LinearLayout mLineQRScan;
     private RfidScanDialog mDialog;
-    private long detailId;
+    private long assertsId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +59,13 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
      */
     private void initData() {
         DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
-        DetailDao detailDao = daoSession.getDetailDao();
-        Detail detail = detailDao.queryBuilder()
-                .where(DetailDao.Properties.DetailId.eq(detailId))
+        AssetBean assetBean = daoSession.getAssetBeanDao().queryBuilder()
+                .where(AssetBeanDao.Properties.Id.eq(assertsId))
                 .unique();
         UserDao userDao = daoSession.getUserDao();
         User user = userDao.queryBuilder()
-                .where(UserDao.Properties.Id.eq(detail.getUserId()))
+                .where(UserDao.Properties.Id.eq(assetBean.getUserId()))
                 .unique();
-        AssetBean assetBean = daoSession.getAssetBeanDao().queryBuilder()
-                .where(AssetBeanDao.Properties.Id.eq(detail.getPropertyId()))
-                .unique();
-
         mTVAssertRFID.setText(assetBean.getRfid());
         mTVAssertName.setText(assetBean.getFacilityName());
         mTVAssertType.setText(assetBean.getFacilityType());
@@ -147,7 +140,10 @@ public class StocktakingDetailActivity extends AppCompatActivity implements View
     public void receiveDetailId(MessageEvent messageEvent) {
         if(messageEvent.getPublish().equals("DetailRecyclerAdapter") &&
                 messageEvent.getSubscriber().equals("StocktakingDetailActivity")){
-            this.detailId = (long) messageEvent.getMessage();
+            this.assertsId = (long) messageEvent.getMessage();
+        }else if(messageEvent.getPublish().equals("SurplusRecyclerAdapter")&&
+                messageEvent.getSubscriber().equals("StocktakingDetailActivity")){
+            this.assertsId = (long) messageEvent.getMessage();
         }
     }
 

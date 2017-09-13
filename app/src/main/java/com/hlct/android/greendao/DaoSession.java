@@ -12,6 +12,7 @@ import com.hlct.android.bean.AssetBean;
 import com.hlct.android.bean.BankInfo;
 import com.hlct.android.bean.Detail;
 import com.hlct.android.bean.InfoBean;
+import com.hlct.android.bean.InventorySurplus;
 import com.hlct.android.bean.LoginUser;
 import com.hlct.android.bean.PlanBean;
 import com.hlct.android.bean.User;
@@ -20,6 +21,7 @@ import com.hlct.android.greendao.AssetBeanDao;
 import com.hlct.android.greendao.BankInfoDao;
 import com.hlct.android.greendao.DetailDao;
 import com.hlct.android.greendao.InfoBeanDao;
+import com.hlct.android.greendao.InventorySurplusDao;
 import com.hlct.android.greendao.LoginUserDao;
 import com.hlct.android.greendao.PlanBeanDao;
 import com.hlct.android.greendao.UserDao;
@@ -37,6 +39,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig bankInfoDaoConfig;
     private final DaoConfig detailDaoConfig;
     private final DaoConfig infoBeanDaoConfig;
+    private final DaoConfig inventorySurplusDaoConfig;
     private final DaoConfig loginUserDaoConfig;
     private final DaoConfig planBeanDaoConfig;
     private final DaoConfig userDaoConfig;
@@ -45,6 +48,7 @@ public class DaoSession extends AbstractDaoSession {
     private final BankInfoDao bankInfoDao;
     private final DetailDao detailDao;
     private final InfoBeanDao infoBeanDao;
+    private final InventorySurplusDao inventorySurplusDao;
     private final LoginUserDao loginUserDao;
     private final PlanBeanDao planBeanDao;
     private final UserDao userDao;
@@ -65,6 +69,9 @@ public class DaoSession extends AbstractDaoSession {
         infoBeanDaoConfig = daoConfigMap.get(InfoBeanDao.class).clone();
         infoBeanDaoConfig.initIdentityScope(type);
 
+        inventorySurplusDaoConfig = daoConfigMap.get(InventorySurplusDao.class).clone();
+        inventorySurplusDaoConfig.initIdentityScope(type);
+
         loginUserDaoConfig = daoConfigMap.get(LoginUserDao.class).clone();
         loginUserDaoConfig.initIdentityScope(type);
 
@@ -78,6 +85,7 @@ public class DaoSession extends AbstractDaoSession {
         bankInfoDao = new BankInfoDao(bankInfoDaoConfig, this);
         detailDao = new DetailDao(detailDaoConfig, this);
         infoBeanDao = new InfoBeanDao(infoBeanDaoConfig, this);
+        inventorySurplusDao = new InventorySurplusDao(inventorySurplusDaoConfig, this);
         loginUserDao = new LoginUserDao(loginUserDaoConfig, this);
         planBeanDao = new PlanBeanDao(planBeanDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
@@ -86,6 +94,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(BankInfo.class, bankInfoDao);
         registerDao(Detail.class, detailDao);
         registerDao(InfoBean.class, infoBeanDao);
+        registerDao(InventorySurplus.class, inventorySurplusDao);
         registerDao(LoginUser.class, loginUserDao);
         registerDao(PlanBean.class, planBeanDao);
         registerDao(User.class, userDao);
@@ -96,6 +105,7 @@ public class DaoSession extends AbstractDaoSession {
         bankInfoDaoConfig.clearIdentityScope();
         detailDaoConfig.clearIdentityScope();
         infoBeanDaoConfig.clearIdentityScope();
+        inventorySurplusDaoConfig.clearIdentityScope();
         loginUserDaoConfig.clearIdentityScope();
         planBeanDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
@@ -115,6 +125,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public InfoBeanDao getInfoBeanDao() {
         return infoBeanDao;
+    }
+
+    public InventorySurplusDao getInventorySurplusDao() {
+        return inventorySurplusDao;
     }
 
     public LoginUserDao getLoginUserDao() {

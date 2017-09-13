@@ -38,7 +38,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static com.hlct.android.DataCache.DataCache.getParseResult;
 import static com.hlct.android.constant.DatabaseConstant.DATACHCHE_FILE_RESULT;
 import static com.hlct.android.constant.DatabaseConstant.setupDatabase;
@@ -55,6 +54,7 @@ import static com.hlct.android.util.SnackbarUtil.showSnackbar;
 public class LoginActivity extends AppCompatActivity {
     private Context mContext;
     // UI references
+    ShimmerFrameLayout mContainer;
     private AutoCompleteTextView mLoginName;
 
     private EditText mPasswordView;
@@ -79,9 +79,8 @@ public class LoginActivity extends AppCompatActivity {
         mContext = LoginActivity.this;
         initData();
         ActivityUtils.getInstance().addActivity(this);
-        ShimmerFrameLayout container =
-                (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
-        container.startShimmerAnimation();
+        mContainer = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        mContainer.startShimmerAnimation();
         //初始化数据库
         daoSession = setupDatabase(this);
         // Set up the login form.
@@ -312,6 +311,7 @@ public class LoginActivity extends AppCompatActivity {
         if (materialDialog != null) {
             materialDialog.dismiss();
         }
+        mContainer.stopShimmerAnimation();
         super.onDestroy();
     }
 

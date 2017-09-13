@@ -14,6 +14,7 @@
         android:background="@color/cardview_light_background"
         >
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/activity_stocktaking_plan_CTL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="56dp"
@@ -157,6 +158,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout="@layout/tab_layout_item2"/>
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout="@layout/tab_layout_item3"/>
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 

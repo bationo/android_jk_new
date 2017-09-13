@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,11 +20,14 @@ import android.widget.TextView;
 import com.hlct.android.R;
 import com.hlct.android.adapter.FragmentPagerAdapterWithTab;
 import com.hlct.android.bean.Detail;
+import com.hlct.android.bean.InventorySurplus;
 import com.hlct.android.bean.PlanBean;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.fragment.StocktakingDetailFragment;
+import com.hlct.android.fragment.StocktakingSurplusFragment;
 import com.hlct.android.greendao.DaoSession;
 import com.hlct.android.greendao.DetailDao;
+import com.hlct.android.greendao.InventorySurplusDao;
 import com.hlct.android.greendao.PlanBeanDao;
 import com.hlct.android.util.RfidScanDialog;
 
@@ -40,6 +44,7 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
     private Context mContext;
     /*****************view********************/
     private AppBarLayout mAppBarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolBar;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -51,10 +56,13 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
 
     private TabItem tabItem1;
     private TabItem tabItem2;
+    private TabItem tabItem3;
     private TextView tabItemTV1;
     private TextView tabItemCount1;
     private TextView tabItemTV2;
     private TextView tabItemCount2;
+    private TextView tabItemTV3;
+    private TextView tabItemCount3;
 
     private RfidScanDialog mDialog;
     /*****************data*********************/
@@ -63,8 +71,10 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
     private ArrayList<PlanBean> mList = new ArrayList<>();
     /*****************misc*********************/
     private FragmentPagerAdapterWithTab mFragmentPagerAdapter;
-    StocktakingDetailFragment fragment;
-    StocktakingDetailFragment fragment1;
+    StocktakingDetailFragment fragment;     //未盘点fragment
+    StocktakingDetailFragment fragment1;    //已盘点fragment
+    StocktakingSurplusFragment fragment2;    //盘盈fragment
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +86,7 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
         /***********fragment view pager***************/
@@ -114,14 +124,13 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
             public void onTabUnselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        /*((TextView) tab.getCustomView().findViewById(R.id.tab_layout_item_tv1)).
-                                setTextColor(Color.parseColor("#757575"));*/
                         tabItemTV1.setTextColor(Color.parseColor("#757575"));
                         break;
                     case 1:
-                        /*((TextView) tab.getCustomView().findViewById(R.id.tab_layout_item_tv2)).
-                                setTextColor(Color.parseColor("#757575"));*/
                         tabItemTV2.setTextColor(Color.parseColor("#757575"));
+                        break;
+                    case 2:
+                        tabItemTV3.setTextColor(Color.parseColor("#757575"));
                         break;
                     default:
                         break;
@@ -137,8 +146,9 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-               /* Log.e("viewpager scroll ---->", "position = " + position + ", positionOffset=" + positionOffset
+                /*Log.e("viewpager scroll ---->", "position = " + position + ", positionOffset=" + positionOffset
                         + ", positonOffsetPixel=" + positionOffsetPixels);*/
+                //这里 position 的位置是 滑动两个pager中的左边的那一个,比如在pager0 和pager1 之间滑动的时候,position都是0
                 switch (position) {
                     case 0:
                         if (positionOffset > 0.5) {
@@ -150,6 +160,13 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
                         }
                         break;
                     case 1:
+                        if (positionOffset > 0.5) {
+                            tabItemTV2.setTextColor(Color.parseColor("#757575"));
+                            tabItemTV3.setTextColor(Color.parseColor("#FF4081"));
+                        } else {
+                            tabItemTV2.setTextColor(Color.parseColor("#FF4081"));
+                            tabItemTV3.setTextColor(Color.parseColor("#757575"));
+                        }
                         break;
                     default:
                         break;
@@ -192,11 +209,15 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
                 .where(DetailDao.Properties.PlanId.eq(id))
                 .where(DetailDao.Properties.InventoryState.eq("已盘点"))
                 .list();
+        List<InventorySurplus> inventorySurplusList = daoSession.getInventorySurplusDao().queryBuilder()
+                .where(InventorySurplusDao.Properties.PlanId.eq(id))
+                .list();
         mTVDate.setText(planBean.getPlanTime());
         mTVPerson.setText(planBean.getInventoryPerson());
         mTVPlanNumber.setText(planBean.getPlanNumber());
         tabItemCount1.setText(details.size() + "");
         tabItemCount2.setText(detailList.size() + "");
+        tabItemCount3.setText(inventorySurplusList.size() + "");
     }
 
     @Override
@@ -228,7 +249,9 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
      */
     private void initView() {
         mAppBarLayout = (AppBarLayout) findViewById(R.id.activity_stocktaking_plan_appbar_layout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_stocktaking_plan_CTL);
         mToolBar = (Toolbar) findViewById(R.id.activity_stocktaking_plan_toolbar);
+        setSupportActionBar(mToolBar);
         mTabLayout = (TabLayout) findViewById(R.id.activity_stocktaking_plan_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.activity_stocktaking_plan_viewpager);
         mTVDate = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_date);
@@ -236,14 +259,16 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         mTVPlanNumber = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_number);
         mTVInvenory = (TextView) findViewById(R.id.activity_stocktaking_plan_tv_start_inventory);
         mTVInvenory.setOnClickListener(this);
-
+        // 以下是设置自定义tab layout
         tabItem1 = (TabItem) findViewById(R.id.tab_item1);
         tabItem2 = (TabItem) findViewById(R.id.tab_item2);
+        tabItem3 = (TabItem) findViewById(R.id.tab_item3);
         tabItemTV1 = (TextView) mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.tab_layout_item_tv1);
         tabItemCount1 = (TextView) mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.tab_layout_item_count1);
         tabItemTV2 = (TextView) mTabLayout.getTabAt(1).getCustomView().findViewById(R.id.tab_layout_item_tv2);
         tabItemCount2 = (TextView) mTabLayout.getTabAt(1).getCustomView().findViewById(R.id.tab_layout_item_count2);
-
+        tabItemTV3 = (TextView) mTabLayout.getTabAt(2).getCustomView().findViewById(R.id.tab_layout_item_tv3);
+        tabItemCount3 = (TextView) mTabLayout.getTabAt(2).getCustomView().findViewById(R.id.tab_layout_item_count3);
         mDialog = new RfidScanDialog();
     }
 
@@ -255,28 +280,33 @@ public class StocktakingPlanActivity extends AppCompatActivity implements View.O
         //TODO 区别开哪个是盘点过的,那个是没有盘点过得
         fragment = new StocktakingDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("status",getResources().getString(R.string.not_inventory));
+        bundle.putString("status", getResources().getString(R.string.not_inventory));
         fragment.setArguments(bundle);
         fragment1 = new StocktakingDetailFragment();
         Bundle bundle1 = new Bundle();
-        bundle1.putString("status",getResources().getString(R.string.have_inventory));
+        bundle1.putString("status", getResources().getString(R.string.have_inventory));
         fragment1.setArguments(bundle1);
+        fragment2 = new StocktakingSurplusFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putString("status", getResources().getString(R.string.inventory_profit));
+        fragment2.setArguments(bundle2);
         mFragments.add(fragment);
         mFragments.add(fragment1);
+        mFragments.add(fragment2);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_stocktaking_plan_tv_start_inventory:
-                mDialog.show(getSupportFragmentManager(),"dialog");
+                mDialog.show(getSupportFragmentManager(), "dialog");
                 break;
             default:
                 break;
         }
     }
 
-    public  void refreshView(){
+    public void refreshView() {
         onResume();
         fragment.onResume();
         fragment1.onResume();

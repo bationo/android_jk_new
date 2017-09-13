@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hlct.android.R;
-import com.hlct.android.adapter.DetailRecyclerAdapter;
-import com.hlct.android.bean.Detail;
+import com.hlct.android.adapter.SurplusRecyclerAdapter;
+import com.hlct.android.bean.InventorySurplus;
 import com.hlct.android.constant.DatabaseConstant;
 import com.hlct.android.greendao.DaoSession;
-import com.hlct.android.greendao.DetailDao;
+import com.hlct.android.greendao.InventorySurplusDao;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,39 +28,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lazylee on 2017/7/26.
+ * 资产盘点 盘盈界面
+ *
+ * @author lazylee
  */
+public class StocktakingSurplusFragment extends Fragment {
 
-public class StocktakingDetailFragment extends Fragment {
-
-    // 注意，tag用于 打印LOG信息时最多 23个字符
-    private static final String TAG = "StocktakingDtFragment";
     private Context mContext;
+    private static final String TAG = "StocktakingSurplusFrag";
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "status";
+    private String mStatus;
     private View mRootView;
     private RecyclerView mRecyclerView;
+    private SurplusRecyclerAdapter mRecyclerAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private DetailRecyclerAdapter mRecyclerAdapter;
-    private String mStatus;
 
     /*****data*****/
-    private List<Detail> mList = new ArrayList<>();
+    private List<InventorySurplus> mList = new ArrayList<>();
     private long planId;
 
-    @Nullable
+    public StocktakingSurplusFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_stocktaking_detail, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mStatus = getArguments().getString(ARG_PARAM1);
+        }
+        mContext = getActivity();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mRootView = inflater.inflate(R.layout.fragment_stocktaking_surplus, container, false);
         return mRootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mContext = getActivity();
-        mStatus = getArguments().getString("status");
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_detail_recycler);
-        mRecyclerAdapter = new DetailRecyclerAdapter(mContext, mList);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.fragment_stocktaking_surplus_recycler);
+        mRecyclerAdapter = new SurplusRecyclerAdapter(mContext, mList);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayout.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
@@ -68,7 +81,7 @@ public class StocktakingDetailFragment extends Fragment {
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
         //设置下来加载更多
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.fragment_stocktaking_detail_SR);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.fragment_stocktaking_surplus_SR);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setColorSchemeColors(Color.RED);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -106,32 +119,6 @@ public class StocktakingDetailFragment extends Fragment {
     }
 
     /**
-     * 加载数据填在recyclerView中。
-     */
-    private void initData() {
-        // 加载数据
-        /*Log.e("DTFragment------->", "planid ====" + planId);
-        Log.e("DTFragment------->", "status ====" + mStatus);*/
-        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
-        List<Detail> list = daoSession.getDetailDao().queryBuilder()
-                .where(DetailDao.Properties.PlanId.eq(planId))
-                .where(DetailDao.Properties.InventoryState.eq(mStatus))
-                .orderAsc(DetailDao.Properties.DetailId)
-                .list();
-        mList.clear();
-        mList.addAll(list);
-        mRecyclerAdapter.notifyDataSetChanged();
-
-    }
-
-    @Nullable
-    @Override
-    public View getView() {
-        return super.getView();
-    }
-
-
-    /**
      * 接收id
      *
      * @param id 消息事件
@@ -139,6 +126,16 @@ public class StocktakingDetailFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
     public void onHandleId(Long id) {
         this.planId = id;
+    }
+
+    private void initData() {
+        DaoSession daoSession = DatabaseConstant.setupDatabase(mContext);
+        List<InventorySurplus> list = daoSession.getInventorySurplusDao().queryBuilder()
+                .where(InventorySurplusDao.Properties.PlanId.eq(planId))
+                .list();
+        mList.clear();
+        mList.addAll(list);
+        mRecyclerAdapter.notifyDataSetChanged();
     }
 
 }
